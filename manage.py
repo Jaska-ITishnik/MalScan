@@ -16,4 +16,3 @@ if __name__ == '__main__':
     main()
 
 # python manage.py ember2024_train --apk_dir data/ember2024_apk --pdf_dir data/ember2024_pdf #
-# python manage.py ember2024_vectorize --apk_dir data/ember2024_apk --pdf_dir data/ember2024_pdf
