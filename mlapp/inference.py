@@ -34,7 +34,7 @@ def detect_file_type(file_path: str, mime_type: str | None = None) -> str:
 def verdict_from_score(score_percent: int) -> str:
     if score_percent >= 70:
         return "malicious"
-    if score_percent >= 30:
+    if score_percent >= 40:
         return "suspicious"
     return "benign"
 

@@ -1,10 +1,12 @@
 from django.db import models
 from django.db.models import TextChoices
 
+from scanner.validators import validate_file_size
+
 
 class Sample(models.Model):
     original_name = models.CharField(max_length=255, verbose_name="Fayl nomi")
-    stored_file = models.FileField(upload_to="uploads/%Y/%m/%d/", verbose_name="Fayl")
+    stored_file = models.FileField(upload_to="uploads/%Y/%m/%d/", verbose_name="Fayl", validators=[validate_file_size])
     size_bytes = models.BigIntegerField(default=0, verbose_name="Hajm (bayt)")
     sha256 = models.CharField(max_length=64, blank=True, default="", verbose_name="SHA-256")
     mime_type = models.CharField(max_length=120, blank=True, default="", verbose_name="MIME")
