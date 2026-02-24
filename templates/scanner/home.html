@@ -1,30 +1,189 @@
 {% extends "base.html" %}
-{% block title %}MalScan • Home{% endblock %}
-{% block content %}
-<section class="hero">
-  <h1>Static Malware Scoring (APK + PDF)</h1>
-  <p>
-    Upload a file — we compute an ML-based maliciousness score using EMBERv3/thrember features.
-    No registration. Files are not executed.
-  </p>
-  <div class="hero-actions">
-    <a class="btn primary" href="/scan/">Scan a file</a>
-    <a class="btn" href="/history/">View history</a>
-  </div>
+{% block title %}MalScan • Главная{% endblock %}
 
-  <div class="cards">
-    <div class="card">
-      <h3>Supported now</h3>
-      <p><b>APK</b> and <b>PDF</b> only (first MVP). Add more via new models.</p>
-    </div>
-    <div class="card">
-      <h3>Output</h3>
-      <p>Score (%), verdict, and top contributing vector indices.</p>
-    </div>
-    <div class="card">
-      <h3>Dataset</h3>
-      <p>Trained on EMBER2024 vectorized features (train/test split by time).</p>
-    </div>
-  </div>
-</section>
+{% block content %}
+    <section class="hero">
+        <div class="hero-top">
+            <div>
+                <h1>MalScan — анализ файлов и оценка вредоносности</h1>
+                <p class="lead">
+                    Веб-приложение для статического анализа файлов: определяем тип, извлекаем признаки и считаем риск
+                    (0–100%)
+                    с объяснением причин. Без запуска файлов.
+                </p>
+
+                <div class="hero-actions">
+                    <a class="btn primary" href="/scan/">Проверить файл</a>
+                    <a class="btn" href="/history/">История</a>
+                </div>
+
+                <div class="badges">
+                    <span class="tag">Статический анализ</span>
+                    <span class="tag">ML-скоринг</span>
+                    <span class="tag">Объяснимый результат</span>
+                    <span class="tag">Расширяемые форматы</span>
+                </div>
+            </div>
+
+            <div class="hero-card">
+                <div class="hero-card-head">
+                    <div class="hc-title">Что вы получите</div>
+                    <div class="hc-sub">после загрузки файла</div>
+                </div>
+
+                <div class="hc-metric">
+                    <div class="hc-metric-label">Риск</div>
+                    <div class="hc-metric-value">0–100%</div>
+                </div>
+
+                <div class="hc-list">
+                    <div class="hc-item">
+                        <div class="hc-dot"></div>
+                        <div>
+                            <div class="hc-item-title">Вердикт</div>
+                            <div class="hc-item-text">benign / suspicious / malicious</div>
+                        </div>
+                    </div>
+                    <div class="hc-item">
+                        <div class="hc-dot"></div>
+                        <div>
+                            <div class="hc-item-title">Причины</div>
+                            <div class="hc-item-text">топ факторов, влияющих на оценку</div>
+                        </div>
+                    </div>
+                    <div class="hc-item">
+                        <div class="hc-dot"></div>
+                        <div>
+                            <div class="hc-item-title">Метаданные</div>
+                            <div class="hc-item-text">хеш, MIME, размер, тип файла</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hc-foot muted">
+                    Совет: для лучших результатов используйте актуальные версии моделей.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-head">
+            <h2>Поддерживаемые форматы</h2>
+            <p class="muted">
+                Архитектура модульная: для каждого типа файла подключается своя модель и набор признаков.
+                Сейчас могут быть активны не все модули — список расширяется.
+            </p>
+        </div>
+
+        <div class="cards grid-4">
+            <div class="card">
+                <h3>APK</h3>
+                <p>Android-пакеты. Детекция по признакам EMBERv3/thrember.</p>
+                <div class="pill">Модуль активен</div>
+            </div>
+
+            <div class="card">
+                <h3>PDF</h3>
+                <p>Документы PDF. ML-оценка + индикаторы содержимого.</p>
+                <div class="pill">Модуль активен</div>
+            </div>
+
+            <div class="card">
+                <h3>PE (EXE/DLL)</h3>
+                <p>Windows-исполняемые файлы и библиотеки.</p>
+                <div class="pill ghost">Скоро</div>
+            </div>
+
+            <div class="card">
+                <h3>ELF</h3>
+                <p>Linux-бинарники и компоненты.</p>
+                <div class="pill ghost">Скоро</div>
+            </div>
+        </div>
+
+        <div class="muted small" style="margin-top:10px;">
+            *При загрузке неподдерживаемого типа файл сохраняется и будет отображён как “Unknown” до подключения
+            соответствующего модуля.
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-head">
+            <h2>Как работает анализ</h2>
+        </div>
+
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <div>
+                    <div class="step-title">Определение типа</div>
+                    <div class="step-text muted">По расширению и MIME выбирается пайплайн (APK/PDF/PE/ELF/…).</div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-num">2</div>
+                <div>
+                    <div class="step-title">Извлечение признаков</div>
+                    <div class="step-text muted">Строится вектор признаков (например EMBERv3/thrember) для выбранного
+                        типа.
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-num">3</div>
+                <div>
+                    <div class="step-title">ML-скоринг</div>
+                    <div class="step-text muted">Модель выдаёт вероятность вредоносности → переводим в 0–100%.</div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-num">4</div>
+                <div>
+                    <div class="step-title">Объяснение результата</div>
+                    <div class="step-text muted">Показываем ключевые факторы, влияющие на решение (для прозрачности).
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-head">
+            <h2>Безопасность</h2>
+            <p class="muted">Проект спроектирован так, чтобы минимизировать риск при работе с потенциально опасными
+                файлами.</p>
+        </div>
+
+        <div class="cards grid-3">
+            <div class="card">
+                <h3>Файлы не выполняются</h3>
+                <p>Анализ только статический: чтение байтов и извлечение признаков.</p>
+            </div>
+            <div class="card">
+                <h3>Изоляция хранения</h3>
+                <p>Загрузки сохраняются вне статических директорий; можно вынести на отдельный диск/путь.</p>
+            </div>
+            <div class="card">
+                <h3>Трассируемость</h3>
+                <p>Сохраняются хеши и результаты проверок для истории и аудита.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section cta">
+        <div class="cta-inner">
+            <div>
+                <h2>Готовы проверить файл?</h2>
+                <p class="muted">Начните с одного файла — результат появится сразу в удобном отчёте.</p>
+            </div>
+            <div class="cta-actions">
+                <a class="btn primary" href="/scan/">Проверить файл</a>
+                <a class="btn" href="/history/">Посмотреть историю</a>
+            </div>
+        </div>
+    </section>
 {% endblock %}

@@ -6,9 +6,9 @@ from django.urls import reverse_lazy
 from django.views.generic import FormView, DetailView, ListView, TemplateView
 
 from mlapp.inference import infer
-from .forms import UploadFileForm
-from .models import Sample, Scan
-from .utils import sha256_file
+from scanner.forms import UploadFileForm
+from scanner.models import Scan, Sample
+from scanner.utils import sha256_file
 
 
 class HomeView(TemplateView):

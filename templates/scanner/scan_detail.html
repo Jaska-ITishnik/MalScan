@@ -1,69 +1,91 @@
 {% extends "base.html" %}
-{% block title %}MalScan • Result{% endblock %}
+{% block title %}MalScan • Результат{% endblock %}
+
 {% block content %}
-<h2>Result</h2>
-
-<div class="grid">
-  <div class="panel">
-    <h3>File</h3>
-    <div class="kv">
-      <div class="k">Name</div><div class="v">{{ scan.sample.original_name }}</div>
-      <div class="k">Type</div><div class="v mono">{{ scan.sample.detected_type }}</div>
-      <div class="k">MIME</div><div class="v mono">{{ scan.sample.mime_type|default:"-" }}</div>
-      <div class="k">Size</div><div class="v mono">{{ scan.sample.size_bytes }} bytes</div>
-      <div class="k">SHA-256</div><div class="v mono">{{ scan.sample.sha256 }}</div>
-    </div>
-  </div>
-
-  <div class="panel">
-    <h3>Verdict</h3>
-    <div class="scorebox">
-      <div class="badge big {{ scan.verdict }}">{{ scan.verdict }}</div>
-      <div class="score">
-        <span class="mono">{{ scan.score_percent }}%</span>
-        <div class="meter">
-          <div class="meter-bar" style="width: {{ scan.score_percent }}%"></div>
+    <div class="section">
+        <div class="section-head">
+            <h2>Результат анализа</h2>
+            <p class="muted">
+                Ниже — информация о файле, итоговая оценка риска и основные факторы, повлиявшие на решение модели.
+            </p>
         </div>
-      </div>
-    </div>
 
-    <div class="muted small">
-      Model: <span class="mono">{{ scan.model_used|default:"-" }}</span> • Version: <span class="mono">{{ scan.model_version }}</span>
-    </div>
-  </div>
-</div>
+        <div class="grid">
+            <div class="panel">
+                <h3>Файл</h3>
+                <div class="kv">
+                    <div class="k">Имя</div>
+                    <div class="v">{{ scan.sample.original_name }}</div>
+                    <div class="k">Тип</div>
+                    <div class="v mono">{{ scan.sample.detected_type|default:"—" }}</div>
+                    <div class="k">MIME</div>
+                    <div class="v mono">{{ scan.sample.mime_type|default:"—" }}</div>
+                    <div class="k">Размер</div>
+                    <div class="v mono">{{ scan.sample.size_bytes }} байт</div>
+                    <div class="k">SHA-256</div>
+                    <div class="v mono">{{ scan.sample.sha256 }}</div>
+                </div>
+            </div>
 
-<div class="panel">
-  <h3>Why (top contributions)</h3>
+            <div class="panel">
+                <h3>Вердикт</h3>
+                <div class="scorebox">
+                    <div class="badge big {{ scan.verdict }}">{{ scan.verdict }}</div>
+                    <div class="score">
+                        <span class="mono">{{ scan.score_percent }}%</span>
+                        <div class="meter">
+                            <div class="meter-bar" style="width: {{ scan.score_percent }}%"></div>
+                        </div>
+                        <div class="muted small" style="margin-top:6px;">
+                            Риск — это вероятность вредоносности по оценке модели (0–100%).
+                        </div>
+                    </div>
+                </div>
 
-  {% if scan.reasons_json.error %}
-    <p class="danger">{{ scan.reasons_json.error }}</p>
-  {% else %}
-    <p class="muted small">
-      For this MVP we show top weighted vector indices (<span class="mono">f0..fN</span>).
-    </p>
-
-    <div class="table">
-      <div class="thead">
-        <div>Feature</div>
-        <div>Value</div>
-        <div>Weight</div>
-        <div>Contribution</div>
-      </div>
-      {% for r in scan.reasons_json.top_contributions %}
-        <div class="trow static">
-          <div class="mono">{{ r.feature }}</div>
-          <div class="mono">{{ r.value|floatformat:6 }}</div>
-          <div class="mono">{{ r.weight|floatformat:6 }}</div>
-          <div class="mono">{{ r.contribution|floatformat:6 }}</div>
+                <div class="muted small" style="margin-top:10px;">
+                    Модель: <span class="mono">{{ scan.model_used|default:"—" }}</span>
+                    • Версия: <span class="mono">{{ scan.model_version }}</span>
+                </div>
+            </div>
         </div>
-      {% endfor %}
-    </div>
-  {% endif %}
-</div>
 
-<div class="actions">
-  <a class="btn primary" href="/scan/">Scan another</a>
-  <a class="btn" href="/history/">History</a>
-</div>
+        <div class="panel">
+            <h3>Почему так?</h3>
+
+            {% if scan.reasons_json.error %}
+                <p class="danger">{{ scan.reasons_json.error }}</p>
+                <p class="muted small">
+                    Проверьте, что нужная модель обучена и лежит в папке <span class="mono">artifacts/</span>.
+                </p>
+            {% else %}
+                <p class="muted small">
+                    Ниже показаны наиболее влияющие компоненты признакового вектора (<span class="mono">f0..fN</span>).
+                    Позже можно добавить “человеческие” названия признаков и группировку по категориям.
+                </p>
+
+                <div class="table">
+                    <div class="thead">
+                        <div>Признак</div>
+                        <div>Значение</div>
+                        <div>Вес</div>
+                        <div>Вклад</div>
+                    </div>
+
+                    {% for r in scan.reasons_json.top_contributions %}
+                        <div class="trow static">
+                            <div class="mono">{{ r.feature }}</div>
+                            <div class="mono">{{ r.value|floatformat:6 }}</div>
+                            <div class="mono">{{ r.weight|floatformat:6 }}</div>
+                            <div class="mono">{{ r.contribution|floatformat:6 }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="actions">
+            <a class="btn primary" href="/scan/">Проверить ещё файл</a>
+            <a class="btn" href="/history/">История</a>
+        </div>
+    </div>
 {% endblock %}

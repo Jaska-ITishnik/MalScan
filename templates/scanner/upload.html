@@ -1,49 +1,65 @@
 {% extends "base.html" %}
-{% block title %}MalScan • Upload{% endblock %}
+{% block title %}MalScan • Проверка{% endblock %}
+
 {% block content %}
-<h2>Upload a file</h2>
-
-<div class="panel">
-  <form method="post" enctype="multipart/form-data" class="upload-form" id="uploadForm">
-    {% csrf_token %}
-    <div class="form-row">
-      <label class="file-label">
-        <input type="file" name="file" required id="fileInput"/>
-        <span id="fileName">Choose file…</span>
-      </label>
-      <button class="btn primary" type="submit">Analyze</button>
+    <div class="section">
+    <div class="section-head">
+        <h2>Проверка файла</h2>
+        <p class="muted">
+            Выберите файл для анализа. Приложение определит тип и рассчитает риск (0–100%) без запуска файла.
+        </p>
     </div>
-    <p class="hint">Supported (MVP): <b>.apk</b>, <b>.pdf</b>.</p>
-  </form>
 
-  <div id="progressWrap" class="progress hidden">
-    <div class="bar" id="progressBar"></div>
-  </div>
-</div>
+    <div class="panel">
+        <form method="post" enctype="multipart/form-data" class="upload-form" id="uploadForm">
+            {% csrf_token %}
+            <div class="form-row">
+                <label class="file-label">
+                    <input type="file" name="file" required id="fileInput"/>
+                    <span id="fileName">Выберите файл…</span>
+                </label>
+                <button class="btn primary" type="submit">Анализировать</button>
+            </div>
+
+            <div class="hint">
+                <span class="muted">Поддерживаемые форматы зависят от установленных моделей.</span>
+                <span class="muted">Сейчас обычно:</span>
+                <b>.apk</b>, <b>.pdf</b>
+            </div>
+        </form>
+
+        <div id="progressWrap" class="progress hidden" aria-label="progress">
+            <div class="bar" id="progressBar"></div>
+        </div>
+
+        <div class="muted small" style="margin-top:10px;">
+            Совет: не загружайте конфиденциальные данные. Анализ статический — файлы не выполняются.
+        </div>
+    </div>
 {% endblock %}
 
 {% block scripts %}
-<script>
-(function(){
-  const input = document.getElementById('fileInput');
-  const name = document.getElementById('fileName');
-  const form = document.getElementById('uploadForm');
-  const wrap = document.getElementById('progressWrap');
-  const bar = document.getElementById('progressBar');
+    <script>
+        (function () {
+            const input = document.getElementById('fileInput');
+            const name = document.getElementById('fileName');
+            const form = document.getElementById('uploadForm');
+            const wrap = document.getElementById('progressWrap');
+            const bar = document.getElementById('progressBar');
 
-  input.addEventListener('change', () => {
-    name.textContent = input.files?.[0]?.name || 'Choose file…';
-  });
+            input.addEventListener('change', () => {
+                name.textContent = input.files?.[0]?.name || 'Выберите файл…';
+            });
 
-  form.addEventListener('submit', () => {
-    wrap.classList.remove('hidden');
-    let p = 0;
-    const t = setInterval(() => {
-      p = Math.min(95, p + Math.random()*10);
-      bar.style.width = p + '%';
-    }, 200);
-    window.__malscan_timer = t;
-  });
-})();
-</script>
+            form.addEventListener('submit', () => {
+                wrap.classList.remove('hidden');
+                let p = 0;
+                const t = setInterval(() => {
+                    p = Math.min(95, p + Math.random() * 10);
+                    bar.style.width = p + '%';
+                }, 200);
+                window.__malscan_timer = t;
+            });
+        })();
+    </script>
 {% endblock %}

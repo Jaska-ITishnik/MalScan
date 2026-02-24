@@ -1,38 +1,62 @@
 {% extends "base.html" %}
-{% block title %}MalScan • History{% endblock %}
+{% block title %}MalScan • История{% endblock %}
+
 {% block content %}
-<h2>Scan history</h2>
+    <div class="section">
+        <div class="section-head">
+            <h2>История проверок</h2>
+            <p class="muted">
+                Здесь отображаются результаты всех запусков анализа. Можно быстро открыть отчёт по любому файлу.
+            </p>
+        </div>
 
-{% if scans %}
-  <div class="table">
-    <div class="thead">
-      <div>Time</div>
-      <div>File</div>
-      <div>Type</div>
-      <div>Verdict</div>
-      <div>Score</div>
+        {% if scans %}
+            <div class="panel">
+                <div class="table">
+                    <div class="thead">
+                        <div>Время</div>
+                        <div>Файл</div>
+                        <div>Тип</div>
+                        <div>Вердикт</div>
+                        <div>Риск</div>
+                    </div>
+
+                    {% for s in scans %}
+                        <a class="trow" href="/scan/{{ s.id }}/">
+                            <div class="muted">{{ s.created_at|date:"Y-m-d H:i" }}</div>
+                            <div>{{ s.sample.original_name }}</div>
+                            <div class="mono">{{ s.sample.detected_type|default:"—" }}</div>
+                            <div><span class="badge {{ s.verdict }}">{{ s.verdict }}</span></div>
+                            <div class="mono">{{ s.score_percent }}%</div>
+                        </a>
+                    {% endfor %}
+                </div>
+
+                <div class="pagination" style="margin-top:12px;">
+                    <div class="muted small">
+                        Страница {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                    </div>
+
+                    <div class="actions">
+                        {% if page_obj.has_previous %}
+                            <a class="btn" href="?page={{ page_obj.previous_page_number }}">Назад</a>
+                        {% endif %}
+                        {% if page_obj.has_next %}
+                            <a class="btn" href="?page={{ page_obj.next_page_number }}">Вперёд</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="panel">
+                <h3>Пока нет проверок</h3>
+                <p class="muted">
+                    Вы ещё не анализировали файлы. Начните с первого запуска — результаты появятся здесь.
+                </p>
+                <div class="actions">
+                    <a class="btn primary" href="/scan/">Проверить файл</a>
+                </div>
+            </div>
+        {% endif %}
     </div>
-    {% for s in scans %}
-      <a class="trow" href="/scan/{{ s.id }}/">
-        <div class="muted">{{ s.created_at|date:"Y-m-d H:i" }}</div>
-        <div>{{ s.sample.original_name }}</div>
-        <div class="mono">{{ s.sample.detected_type }}</div>
-        <div class="badge {{ s.verdict }}">{{ s.verdict }}</div>
-        <div class="mono">{{ s.score_percent }}%</div>
-      </a>
-    {% endfor %}
-  </div>
-
-  <div class="pagination">
-    {% if page_obj.has_previous %}
-      <a class="btn" href="?page={{ page_obj.previous_page_number }}">Prev</a>
-    {% endif %}
-    <span class="muted">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
-    {% if page_obj.has_next %}
-      <a class="btn" href="?page={{ page_obj.next_page_number }}">Next</a>
-    {% endif %}
-  </div>
-{% else %}
-  <p class="muted">No scans yet. <a href="/scan/">Scan your first file</a>.</p>
-{% endif %}
 {% endblock %}
