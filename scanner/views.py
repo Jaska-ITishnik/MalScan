@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import magic
 from django.conf import settings
 from django.urls import reverse_lazy

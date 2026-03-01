@@ -6,7 +6,7 @@
         <div class="section-head">
             <h2>Результат анализа</h2>
             <p class="muted">
-                Ниже — информация о файле, итоговая оценка риска и основные факторы, повлиявшие на решение модели.
+                Ниже — информация о файле, итоговая оценка риска и объяснение (понятные причины + категории).
             </p>
         </div>
 
@@ -30,7 +30,7 @@
             <div class="panel">
                 <h3>Вердикт</h3>
                 <div class="scorebox">
-                    <div class="badge big {{ scan.verdict }}">{{ scan.verdict }}</div>
+                    <div class="badge big {{ scan.verdict }}">{{ scan.get_verdict_display }}</div>
                     <div class="score">
                         <span class="mono">{{ scan.score_percent }}%</span>
                         <div class="meter">
@@ -55,31 +55,46 @@
             {% if scan.reasons_json.error %}
                 <p class="danger">{{ scan.reasons_json.error }}</p>
                 <p class="muted small">
-                    Проверьте, что нужная модель обучена и лежит в папке <span class="mono">artifacts/</span>.
+                    Проверьте, что нужная модель лежит в <span class="mono">artifacts/</span>.
                 </p>
             {% else %}
-                <p class="muted small">
-                    Ниже показаны наиболее влияющие компоненты признакового вектора (<span class="mono">f0..fN</span>).
-                    Позже можно добавить “человеческие” названия признаков и группировку по категориям.
-                </p>
+                {% with us=scan.reasons_json.user_summary %}
+                    {% if us and us.reasons %}
+                        <div class="grid" style="grid-template-columns: 1.1fr .9fr;">
+                            <div class="panel" style="margin-bottom:0;">
+                                <h3 style="margin-bottom:6px;">Ключевые причины</h3>
 
-                <div class="table">
-                    <div class="thead">
-                        <div>Признак</div>
-                        <div>Значение</div>
-                        <div>Вес</div>
-                        <div>Вклад</div>
-                    </div>
+                                <div class="reason-list">
+                                    {% for r in us.reasons %}
+                                        <div class="reason-item {{ r.severity|default:'low' }}">
+                                            <div class="reason-title">{{ r.title }}</div>
+                                            <div class="reason-text muted">{{ r.detail }}</div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
 
-                    {% for r in scan.reasons_json.top_contributions %}
-                        <div class="trow static">
-                            <div class="mono">{{ r.feature }}</div>
-                            <div class="mono">{{ r.value|floatformat:6 }}</div>
-                            <div class="mono">{{ r.weight|floatformat:6 }}</div>
-                            <div class="mono">{{ r.contribution|floatformat:6 }}</div>
+                            <div class="panel" style="margin-bottom:0;">
+                                <h3 style="margin-bottom:6px;">Категории риска</h3>
+                                {% if us.categories %}
+                                    <canvas id="catChart" height="210"></canvas>
+                                {% else %}
+                                    <p class="muted">Категории недоступны.</p>
+                                {% endif %}
+                            </div>
                         </div>
-                    {% endfor %}
-                </div>
+
+                        <div class="panel" style="margin-top:12px;">
+                            <h3 style="margin-bottom:6px;">Причины (график)</h3>
+                            <canvas id="reasonChart" height="120"></canvas>
+                        </div>
+
+                    {% else %}
+                        <p class="muted">
+                            Для этого типа файла пока нет человеко-понятных причин. Ниже доступны технические детали.
+                        </p>
+                    {% endif %}
+                {% endwith %}
             {% endif %}
         </div>
 
@@ -88,4 +103,47 @@
             <a class="btn" href="/history/">История</a>
         </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        (function () {
+            // user_summary injected as JSON
+            const us = {{ scan.reasons_json.user_summary|default:"null"|safe }};
+            if (!us) return;
+
+            const cats = (us.categories || []);
+            const reasons = (us.reasons || []).slice(0, 6);
+
+            const catEl = document.getElementById("catChart");
+            const reasonEl = document.getElementById("reasonChart");
+
+            if (catEl && cats.length && window.Chart) {
+                const labels = cats.map(x => x.name);
+                const values = cats.map(x => x.score);
+
+                new Chart(catEl, {
+                    type: "doughnut",
+                    data: {labels, datasets: [{data: values}]},
+                    options: {responsive: true, plugins: {legend: {position: "bottom"}}}
+                });
+            }
+
+            if (reasonEl && reasons.length && window.Chart) {
+                const labels = reasons.map(r => r.title);
+                const sevToScore = (s) => s === "high" ? 100 : (s === "medium" ? 60 : 30);
+                const values = reasons.map(r => sevToScore(r.severity || "low"));
+
+                new Chart(reasonEl, {
+                    type: "bar",
+                    data: {labels, datasets: [{data: values}]},
+                    options: {
+                        responsive: true,
+                        plugins: {legend: {display: false}},
+                        scales: {y: {beginAtZero: true, max: 100}}
+                    }
+                });
+            }
+        })();
+    </script>
 {% endblock %}

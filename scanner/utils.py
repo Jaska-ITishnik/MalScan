@@ -1,5 +1,4 @@
 import hashlib
-import os
 
 
 def sha256_file(path: str, chunk: int = 1024 * 1024) -> str:

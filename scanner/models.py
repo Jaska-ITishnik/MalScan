@@ -23,10 +23,10 @@ class Sample(models.Model):
 
 class Scan(models.Model):
     class VerdictChoice(TextChoices):
-        BENIGN = "benign", "Toza"
-        SUSPICIOUS = "suspicious", "Shubhali"
-        MALICIOUS = "malicious", "Zararli"
-        UNKNOWN = "unknown", "Noma’lum"
+        BENIGN = "benign", "Чисто"
+        SUSPICIOUS = "suspicious", "Подозрительно"
+        MALICIOUS = "malicious", "Вредоносно"
+        UNKNOWN = "unknown", "Неизвестно"
 
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE, related_name="scans", verbose_name="Namuna")
     score_percent = models.IntegerField(default=0, verbose_name="Ball (%)")
