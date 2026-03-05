@@ -16,6 +16,13 @@
         <nav class="nav">
             <a href="/scan/">Проверка</a>
             <a href="/history/">История</a>
+
+            {% if user.is_authenticated %}
+                <span class="nav-user">👤 {{ user.username }}</span>
+                <a href="/accounts/logout/">Выйти</a>
+            {% else %}
+                <a href="/accounts/login/">Войти</a>
+            {% endif %}
         </nav>
     </div>
 </header>

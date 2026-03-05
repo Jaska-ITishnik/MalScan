@@ -9,8 +9,8 @@ from root.settings import STATIC_URL, STATIC_ROOT, MEDIA_URL, MEDIA_ROOT
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("scanner/", include("scanner.urls")),
-    path('', TemplateView.as_view(template_name='auth_app/index.html')),
+    path("", include("scanner.urls")),
+    # path('', TemplateView.as_view(template_name='account/index.html')),
     path('accounts/', include('allauth.urls')),
     path('logout/', LogoutView.as_view())
 

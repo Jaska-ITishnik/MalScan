@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load socialaccount %}
+
+{% block title %}MalScan • Регистрация{% endblock %}
+
+{% block content %}
+<div class="section auth">
+  <div class="auth-card">
+    <div class="auth-head">
+      <h2>Регистрация</h2>
+      <p class="muted">Создайте аккаунт или используйте Google.</p>
+    </div>
+
+    <a class="btn google" href="{% provider_login_url 'google' %}">
+      <span class="g-icon" aria-hidden="true">G</span>
+      Продолжить с Google
+    </a>
+
+    <div class="divider"><span>или</span></div>
+
+    <form method="post" action="{% url 'account_signup' %}" class="auth-form">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="alert danger">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <label class="field">
+        <span class="label">Имя пользователя</span>
+        {{ form.username }}
+      </label>
+
+      <label class="field">
+        <span class="label">Email</span>
+        {{ form.email }}
+      </label>
+
+      <label class="field">
+        <span class="label">Пароль</span>
+        {{ form.password1 }}
+      </label>
+
+      <label class="field">
+        <span class="label">Повтор пароля</span>
+        {{ form.password2 }}
+      </label>
+
+      <button class="btn primary w100" type="submit">Создать аккаунт</button>
+    </form>
+
+    <div class="auth-foot muted small">
+      Уже есть аккаунт?
+      <a href="{% url 'account_login' %}">Войти</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
