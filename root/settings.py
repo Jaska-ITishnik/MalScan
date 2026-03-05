@@ -112,17 +112,17 @@ SOCIALACCOUNT_PROVIDERS = {
             'profile',
             'email'
         ],
-        'APP': {
-            'client_id': os.getenv('CLIENT_ID'),
-            'secret': os.getenv('CLIENT_SECRET'),
-        },
+        # 'APP': {
+        #     'client_id': os.getenv('CLIENT_ID'),
+        #     'secret': os.getenv('CLIENT_SECRET'),
+        # },
         'AUTH_PARAMS': {
             'access_type': 'online',
         }
     }
 }
 
-SITE_ID = 2
+SITE_ID = 1
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"

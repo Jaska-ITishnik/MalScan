@@ -11,7 +11,8 @@
 <body>
 <header class="topbar">
     <div class="container">
-        <a class="brand" href="/">MalScan</a>
+        <a class="brand" href="{% url 'scanner:home' %}"><img src="{% static 'scanner/logo.png' %}" width="180px"
+                                                              height="75px" alt=""></a>
         <nav class="nav">
             <a href="/scan/">Проверка</a>
             <a href="/history/">История</a>
@@ -29,7 +30,7 @@
     </div>
 </footer>
 
-<script src="/static/js/app.js"></script>
+<script src="{% static 'scanner/static/js/app.js' %} "></script>
 {% block scripts %}{% endblock %}
 </body>
 </html>
