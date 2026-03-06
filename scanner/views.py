@@ -1,12 +1,49 @@
 import magic
 from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import logout, login
+from django.db.models import Q
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import FormView, DetailView, ListView, TemplateView
 
 from mlapp.inference import infer
-from scanner.forms import UploadFileForm
+from scanner.forms import UploadFileForm, LoginModelForm
 from scanner.models import Scan, Sample
 from scanner.utils import sha256_file
+
+
+class RegisterFormView(TemplateView):
+    template_name = "account/register.html"
+
+
+class LoginRegisterView(FormView):
+    template_name = 'account/login.html'
+    form_class = LoginModelForm
+
+    def form_valid(self, form):
+        user = form.get_user()
+        login(self.request, user)
+        text = "Вы успешно вошли в систему📣"
+        messages.add_message(self.request, messages.WARNING, text)
+        return redirect('scanner:home')
+
+    def form_invalid(self, form):
+        text = form.errors['__all__'][0]
+        messages.add_message(self.request, messages.WARNING, text)
+        return super().form_invalid(form)
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('scanner:home')
+        return super().dispatch(request, *args, **kwargs)
+
+
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('scanner:home')
 
 
 class HomeView(TemplateView):
@@ -25,6 +62,8 @@ class UploadScanView(FormView):
             original_name=uploaded.name,
             stored_file=uploaded,
             size_bytes=uploaded.size,
+            owner=self.request.user if self.request.user.is_authenticated else None,
+            device_id="" if self.request.user.is_authenticated else getattr(self.request, "device_id", ""),
             sha256="",
             mime_type="",
             detected_type="",
@@ -68,8 +107,20 @@ class ScanDetailView(DetailView):
 
 
 class HistoryView(ListView):
-    model = Scan
+    queryset = Scan.objects.all()
     template_name = "scanner/history.html"
     context_object_name = "scans"
     paginate_by = 20
-    ordering = ["-created_at"]
+    ordering = "-created_at",
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        user = self.request.user
+        device_id = getattr(self.request, "device_id", "")
+        if user.is_authenticated:
+            if device_id:
+                return qs.filter(Q(sample__owner=user) | Q(sample__device_id=device_id))
+            return qs.filter(Q(sample__owner=user))
+        if not device_id:
+            return qs.none()
+        return qs.filter(sample__owner__isnull=True, sample__device_id=device_id)

@@ -537,6 +537,10 @@ h2 {
     color: var(--bad)
 }
 
+.success {
+    color: var(--good)
+}
+
 /* ====== Tables ====== */
 .table {
     border: 1px solid rgba(34, 48, 85, .75);
@@ -785,6 +789,11 @@ h2 {
 .alert.danger {
     border-color: rgba(231, 76, 60, .35);
     color: var(--bad);
+}
+
+.alert.success {
+    border-color: rgba(45, 226, 26, 0.35);
+    color: var(--good);
 }
 
 .nav-user {

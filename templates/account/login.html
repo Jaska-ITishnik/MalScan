@@ -9,9 +9,10 @@
         <div class="auth-card">
             <div class="auth-head">
                 <h2>Вход в систему</h2>
+                <br>
                 <p class="muted">Используйте логин/пароль или продолжите через Google.</p>
             </div>
-
+            <br>
             <a class="btn google" href="{% provider_login_url 'google' %}">
                 <span class="g-icon" aria-hidden="true">G</span>
                 Продолжить с Google
@@ -19,7 +20,7 @@
 
             <div class="divider"><span>или</span></div>
 
-            <form method="post" action="{% url 'account_login' %}" class="auth-form">
+            <form method="post" action="{% url 'scanner:login' %}" class="auth-form">
                 {% csrf_token %}
 
                 {% if form.non_field_errors %}
@@ -27,12 +28,12 @@
                         {{ form.non_field_errors }}
                     </div>
                 {% endif %}
-
+                <br>
                 <label class="field">
                     <span class="label">Логин или Email</span>
-                    {{ form.login }}
+                    {{ form.username }}
                 </label>
-
+                <br>
                 <label class="field">
                     <span class="label">Пароль</span>
                     {{ form.password }}
@@ -49,10 +50,10 @@
 
                 <button class="btn primary w100" type="submit">Войти</button>
             </form>
-
+            <br>
             <div class="auth-foot muted small">
                 Нет аккаунта?
-                <a href="{% url 'account_signup' %}">Зарегистрироваться</a>
+                <a href="{% url 'scanner:register' %}">Зарегистрироваться</a>
             </div>
         </div>
     </div>
