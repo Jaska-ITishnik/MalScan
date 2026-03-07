@@ -1,13 +1,29 @@
 from django import forms
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.forms import FileField, CharField
+from django.forms.forms import Form
+from django.forms.models import ModelForm
 
 
-class UploadFileForm(forms.Form):
-    file = forms.FileField()
+class UploadFileForm(Form):
+    file = FileField()
 
 
-class LoginModelForm(forms.Form):
+class RegisterModelFrom(ModelForm):
+    confirm_password = CharField(max_length=255, label="Confirm password")
+
+    class Meta:
+        model = User
+        fields = "username", "password", "confirm_password"
+
+    def clean(self):
+        cleaned_data = super().clean()
+        return cleaned_data
+
+
+class LoginModelForm(Form):
     username = forms.CharField(max_length=25)
     password = forms.CharField(max_length=255)
 

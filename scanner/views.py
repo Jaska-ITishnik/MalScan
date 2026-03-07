@@ -6,16 +6,23 @@ from django.db.models import Q
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import FormView, DetailView, ListView, TemplateView
+from django.views.generic import FormView, DetailView, ListView, TemplateView, CreateView
 
 from mlapp.inference import infer
-from scanner.forms import UploadFileForm, LoginModelForm
+from scanner.forms import UploadFileForm, LoginModelForm, RegisterModelFrom
 from scanner.models import Scan, Sample
 from scanner.utils import sha256_file
 
 
-class RegisterFormView(TemplateView):
+class RegisterFormView(CreateView):
     template_name = "account/register.html"
+    form_class = RegisterModelFrom
+    success_url = reverse_lazy("scanner:login")
+
+    def form_valid(self, form):
+        text = "Вы успешно зарегистрировались в систему📣"
+        messages.add_message(self.request, messages.WARNING, text)
+        return super().form_valid(form)
 
 
 class LoginRegisterView(FormView):
