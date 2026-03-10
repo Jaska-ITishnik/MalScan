@@ -20,5 +20,43 @@
       "train_rows": 104000,
       "test_rows": 24000
     }
-  }
+  },
+  "dataset_stats": [
+    {
+      "type": "Win32",
+      "weekly": 30000,
+      "train": 1560000,
+      "test": 360000
+    },
+    {
+      "type": "Win64",
+      "weekly": 10000,
+      "train": 520000,
+      "test": 120000
+    },
+    {
+      "type": ".NET",
+      "weekly": 5000,
+      "train": 260000,
+      "test": 60000
+    },
+    {
+      "type": "APK",
+      "weekly": 4000,
+      "train": 208000,
+      "test": 48000
+    },
+    {
+      "type": "PDF",
+      "weekly": 1000,
+      "train": 52000,
+      "test": 12000
+    },
+    {
+      "type": "ELF",
+      "weekly": 500,
+      "train": 26000,
+      "test": 6000
+    }
+  ]
 }

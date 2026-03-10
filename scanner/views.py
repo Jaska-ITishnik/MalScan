@@ -1,8 +1,11 @@
+import json
+from pathlib import Path
+
 import magic
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import logout, login
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -60,6 +63,40 @@ class LogoutView(View):
 
 class HomeView(TemplateView):
     template_name = "scanner/home.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+
+        # 1) dataset stats (from model_meta.json)
+        meta_path = Path(settings.BASE_DIR) / "artifacts" / "model_meta.json"
+        dataset_stats = []
+        if meta_path.exists():
+            try:
+                meta = json.loads(meta_path.read_text(encoding="utf-8"))
+                dataset_stats = meta.get("dataset_stats", [])
+            except Exception:
+                dataset_stats = []
+        ctx["dataset_stats"] = dataset_stats
+
+        # 2) live uploads stats from DB (Samples)
+        rows = (
+            Sample.objects
+            .values("detected_type")
+            .annotate(total=Count("id"))
+            .order_by("-total")
+        )
+        # normalize empty type
+        live = []
+        total_all = 0
+        for r in rows:
+            t = r["detected_type"] or "OTHER"
+            c = r["total"]
+            total_all += c
+            live.append({"type": t, "total": c})
+        ctx["live_stats"] = live
+        ctx["live_total"] = total_all
+
+        return ctx
 
 
 class UploadScanView(FormView):
