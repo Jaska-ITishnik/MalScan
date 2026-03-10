@@ -24,6 +24,11 @@ class RegisterFormView(CreateView):
         messages.add_message(self.request, messages.WARNING, text)
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        text = "⚠Пользователь с таким именем пользователя уже существует."
+        messages.add_message(self.request, messages.WARNING, text)
+        return super().form_invalid(form)
+
 
 class LoginRegisterView(FormView):
     template_name = 'account/login.html'

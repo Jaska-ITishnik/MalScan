@@ -7,6 +7,14 @@
 {% block content %}
     <div class="section auth">
         <div class="auth-card">
+{#            {% if messages %}#}
+{#                {% for message in messages %}#}
+{#                    <div class="alert {% if 'success' in message.tags %}success{% elif 'error' in message.tags %}danger{% else %}info{% endif %}">#}
+{#                        {{ message }}#}
+{#                    </div>#}
+{#                {% endfor %}#}
+{#            {% endif %}#}
+            <br>
             <div class="auth-head">
                 <h2>Вход в систему</h2>
                 <br>
