@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load socialaccount %}
+
+{% block title %}MalScan • Вход через Google{% endblock %}
+
+{% block content %}
+    <div class="section auth">
+        <div class="auth-card">
+            <div class="auth-head">
+                <h2>Вход через Google</h2>
+                <p class="muted">
+                    Вы собираетесь войти в систему с помощью аккаунта Google.
+                </p>
+            </div>
+
+            <div class="divider"><span>подтверждение</span></div>
+
+            <form method="post">
+                {% csrf_token %}
+                <button class="btn primary w100" type="submit">
+                    Продолжить через Google
+                </button>
+            </form>
+
+            <br>
+
+            <div class="auth-foot muted small">
+                <a href="{% url 'scanner:login' %}">Назад ко входу</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
