@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import logout, login
 from django.db.models import Q, Count
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import FormView, DetailView, ListView, TemplateView, CreateView
@@ -15,6 +15,14 @@ from mlapp.inference import infer
 from scanner.forms import UploadFileForm, LoginModelForm, RegisterModelFrom
 from scanner.models import Scan, Sample
 from scanner.utils import sha256_file
+
+
+def privacy_policy(request):
+    return render(request, "scanner/privacy.html")
+
+
+def terms_of_service(request):
+    return render(request, "scanner/terms.html")
 
 
 class RegisterFormView(CreateView):

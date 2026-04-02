@@ -947,3 +947,77 @@ h2 {
 .profile.open .profile-dd {
     display: block
 }
+
+/* ===== Legal pages ===== */
+.legal-page {
+    display: grid;
+    gap: 14px;
+    padding-top: 10px;
+}
+
+.legal {
+    padding: 18px;
+}
+
+.legal h1 {
+    margin: 0 0 10px;
+    font-size: 32px;
+}
+
+.legal h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 22px;
+}
+
+.legal h3 {
+    margin: 16px 0 8px;
+    font-size: 16px;
+}
+
+.legal p {
+    color: var(--muted);
+    line-height: 1.7;
+    margin: 0 0 10px;
+}
+
+.legal-list {
+    margin: 10px 0 0 18px;
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.legal-list li {
+    margin-bottom: 8px;
+}
+
+.legal-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.footer-links {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.footer-links a {
+    color: var(--muted);
+}
+
+.footer-links a:hover {
+    color: var(--text);
+}

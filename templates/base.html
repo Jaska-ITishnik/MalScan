@@ -44,12 +44,17 @@
 </main>
 
 <footer class="footer">
-    <div class="container">
-        <span>Open-source статический анализатор • EMBERv3 (thrember) • расширяемые форматы</span>
+    <div class="container footer-inner">
+        <span>Open-source malware analysis platform powered by EMBERv3 (thrember) and machine learning models.</span>
+        <div class="footer-links">
+            <a href="{% url 'scanner:privacy' %}">Privacy Policy</a>
+            <a href="{% url 'scanner:terms' %}">Terms of Service</a>
+        </div>
     </div>
 </footer>
 
 <script src="{% static 'scanner/static/js/app.js' %} "></script>
+
 {% block scripts %}{% endblock %}
 </body>
 </html>
