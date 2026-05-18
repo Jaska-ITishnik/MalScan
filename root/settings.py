@@ -93,10 +93,6 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# ARTIFACTS_DIR = BASE_DIR / "artifacts"
-# ML_SCHEMA_PATH = ARTIFACTS_DIR / "feature_schema.json"
-# ML_MODEL_PATH = ARTIFACTS_DIR / "model.joblib"
-
 ARTIFACTS_DIR = BASE_DIR / "artifacts"
 APK_MODEL_PATH = ARTIFACTS_DIR / "apk_model.joblib"
 PDF_MODEL_PATH = ARTIFACTS_DIR / "pdf_model.joblib"
