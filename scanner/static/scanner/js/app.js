@@ -63,3 +63,18 @@
         });
     });
 })();
+
+// Password Toggle Visibility
+window.togglePasswordVisibility = function(button) {
+    const wrapper = button.closest('.password-wrapper');
+    const input = wrapper.querySelector('input');
+    const svg = button.querySelector('svg');
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle><line x1="1" y1="1" x2="23" y2="23"></line>';
+    } else {
+        input.type = 'password';
+        svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+    }
+};

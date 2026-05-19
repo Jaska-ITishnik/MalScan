@@ -13,7 +13,8 @@ class UploadFileForm(Form):
 
 
 class RegisterModelFrom(ModelForm):
-    confirm_password = CharField(max_length=255, label="Confirm password")
+    password = CharField(widget=forms.PasswordInput)
+    confirm_password = CharField(max_length=255, widget=forms.PasswordInput, label="Confirm password")
 
     class Meta:
         model = User
@@ -31,7 +32,7 @@ class RegisterModelFrom(ModelForm):
 
 class LoginModelForm(Form):
     username = forms.CharField(max_length=25)
-    password = forms.CharField(max_length=255)
+    password = forms.CharField(max_length=255, widget=forms.PasswordInput)
 
     def get_user(self):
         return self._cache_user
