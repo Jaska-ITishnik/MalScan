@@ -9,26 +9,27 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+<div class="mobile-nav-overlay" id="mobileOverlay"></div>
 <header class="topbar">
     <div class="container">
-        <a class="brand" href="{% url 'scanner:home' %}"><img src="{% static 'scanner/updated_logo-removebg-preview.png' %}" width="180px"
-                                                              height="px" alt=""></a>
-        <nav class="nav">
+        <a class="brand" href="{% url 'scanner:home' %}"><img src="{% static 'scanner/updated_logo-removebg-preview.png' %}" width="160px" height="auto" alt="MalScan"></a>
+
+        <button class="hamburger" id="hamburgerBtn" aria-label="Menyu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="nav" id="mainNav">
             <a href="{% url 'scanner:upload' %}">Проверка</a>
             <a href="{% url 'scanner:history' %}">История</a>
             {% if user.is_authenticated %}
-                <a href="{% url 'scanner:logout' %}">Выйти</a>
-            {% endif %}
-            {% if user.is_authenticated %}
-                {#                <span class="nav-user">👤 {{ user.username }}</span>#}
-                {#                <a href="{% url 'scanner:logout' %}">Выйти</a>#}
                 <div class="profile" id="profileMenu">
                     <button class="profile-btn" type="button">
                         <span class="avatar">{{ user.username|first|upper }}</span>
                         <span class="pname">{{ user.username }}</span>
                         <span class="chev">▾</span>
                     </button>
-
                     <div class="profile-dd">
                         <a href="{% url 'scanner:history' %}">Мои результаты</a>
                         <a href="{% url 'scanner:logout' %}">Выйти</a>
@@ -172,7 +173,7 @@
     </div>
 </footer>
 
-<script src="{% static 'scanner/static/js/app.js' %} "></script>
+<script src="{% static 'scanner/js/app.js' %}"></script>
 
 {% block scripts %}{% endblock %}
 </body>
