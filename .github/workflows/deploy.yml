@@ -2,19 +2,14 @@ name: MalScan CI/CD Deployment
 
 on:
   push:
-    branches: [master]
+    branches: [ master ]
 
 jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-
-    env:
-      PROJECT_PATH: /var/www/MalscanProject
-      SERVICE_NAME: malscan.service
-
     steps:
-      - name: Deploy over SSH
+      - name: executing remote ssh commands using ssh-key
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.HOST }}
@@ -22,20 +17,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           debug: true
           script: |
-            set -e
-
-            cd "${{ env.PROJECT_PATH }}"
-            git pull
-
-            if [ ! -d ".venv" ]; then
-              python3 -m venv .venv
-            fi
-
-            . .venv/bin/activate
-            pip install --upgrade pip
-            pip install -r requirements.txt
-
-            python manage.py migrate --noinput
-            python manage.py collectstatic --noinput
-
-            sudo systemctl restart malscan.service
+            cd /var/www/MalScan
+            git pull 
+            systemctl restart malscan.service
