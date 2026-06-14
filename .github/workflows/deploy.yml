@@ -1,0 +1,48 @@
+name: MalScan CI/CD Deployment
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    env:
+      PROJECT_PATH: /var/www/MalscanProject
+      SERVICE_NAME: malscan.service
+
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v0.1.10
+        env:
+          DOT_ENV_B64: ${{ secrets.DOT_ENV_B64 }}
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          debug: true
+          envs: DOT_ENV_B64
+          script: |
+            set -e
+
+            cd "${{ env.PROJECT_PATH }}"
+            git pull
+
+            if [ -n "$DOT_ENV_B64" ]; then
+              printf '%s' "$DOT_ENV_B64" | base64 -d > .env
+            fi
+
+            if [ ! -d ".venv" ]; then
+              python3 -m venv .venv
+            fi
+
+            . .venv/bin/activate
+            pip install --upgrade pip
+            pip install -r requirements.txt
+
+            python manage.py migrate --noinput
+            python manage.py collectstatic --noinput
+
+            sudo systemctl restart malscan.service
