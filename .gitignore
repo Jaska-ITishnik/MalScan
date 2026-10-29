@@ -34,5 +34,3 @@ fabric.properties
 client_secret_114857459305-a50ne6a1vcd7s840op2udkaiq512lnrc.apps.googleusercontent.com.json
 __pycache__/
 *.py[cod]
-scanner/migrations/*
-!scanner/migrations/__init__.py

@@ -9,12 +9,13 @@ from django.forms.models import ModelForm
 
 
 class UploadFileForm(Form):
-    file = FileField()
+    file = FileField(label="Fayl", error_messages={"required": "Tahlil qilish uchun fayl tanlang."})
 
 
 class RegisterModelFrom(ModelForm):
-    password = CharField(widget=forms.PasswordInput)
-    confirm_password = CharField(max_length=255, widget=forms.PasswordInput, label="Confirm password")
+    username = forms.CharField(max_length=150, label="Foydalanuvchi nomi")
+    password = CharField(widget=forms.PasswordInput, label="Parol")
+    confirm_password = CharField(max_length=255, widget=forms.PasswordInput, label="Parolni qayta kiriting")
 
     class Meta:
         model = User
@@ -22,17 +23,16 @@ class RegisterModelFrom(ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        cleaned_data["password"] = make_password(cleaned_data["password"])
         username = cleaned_data["username"]
-        password = cleaned_data["password"]
-        if User.objects.filter(username=username, password=password).exists():
-            raise ValidationError("Пользователь с таким именем пользователя уже существует.")
+        if User.objects.filter(username=username).exists():
+            raise ValidationError("Bu foydalanuvchi nomi band. Boshqa nom tanlang.")
+        cleaned_data["password"] = make_password(cleaned_data["password"])
         return cleaned_data
 
 
 class LoginModelForm(Form):
-    username = forms.CharField(max_length=25)
-    password = forms.CharField(max_length=255, widget=forms.PasswordInput)
+    username = forms.CharField(max_length=25, label="Login yoki elektron pochta")
+    password = forms.CharField(max_length=255, widget=forms.PasswordInput, label="Parol")
 
     def get_user(self):
         return self._cache_user
@@ -44,12 +44,12 @@ class LoginModelForm(Form):
         password = cleaned_data.get('password')
 
         if not username or not password:
-            raise ValidationError("Имя пользователя и пароль не могут быть пустыми")
+            raise ValidationError("Login va parolni kiriting.")
 
         user = authenticate(username=username, password=password)
 
         if user is None:
-            raise ValidationError("Пользователь с таким именем или паролем не найден")
+            raise ValidationError("Login yoki parol noto‘g‘ri.")
 
         self._cache_user = user
         return cleaned_data

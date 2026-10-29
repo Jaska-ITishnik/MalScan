@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load socialaccount %}
 
-{% block title %}MalScan • Вход{% endblock %}
+{% block title %}MalScan • Kirish{% endblock %}
 
 {% block content %}
     <div class="section auth">
@@ -16,17 +16,17 @@
             {#            {% endif %}#}
             <br>
             <div class="auth-head">
-                <h2>Вход в систему</h2>
+                <h2>Tizimga kirish</h2>
                 <br>
-                <p class="muted">Используйте логин/пароль или продолжите через Google.</p>
+                <p class="muted">Login va parol bilan kiring yoki Google orqali davom eting.</p>
             </div>
             <br>
             <a class="btn google" href="{% provider_login_url 'google' %}">
                 <span class="g-icon" aria-hidden="true">G</span>
-                Продолжить с Google
+                Google orqali davom etish
             </a>
 
-            <div class="divider"><span>или</span></div>
+            <div class="divider"><span>yoki</span></div>
 
             <form method="post" action="{% url 'scanner:login' %}" class="auth-form">
                 {% csrf_token %}
@@ -38,12 +38,12 @@
                 {% endif %}
                 <br>
                 <label class="field">
-                    <span class="label">Логин или Email</span>
+                    <span class="label">Login yoki elektron pochta</span>
                     {{ form.username }}
                 </label>
                 <br>
                 <label class="field">
-                    <span class="label">Пароль</span>
+                    <span class="label">Parol</span>
                     <div class="password-wrapper">
                         {{ form.password }}
                         <button type="button" class="toggle-password" onclick="togglePasswordVisibility(this)">
@@ -55,18 +55,18 @@
                 <div class="row">
                     <label class="check">
                         {{ form.remember }}
-                        <span>Запомнить меня</span>
+                        <span>Ma’lumotlarimni eslab qol</span>
                     </label>
 
-                    <a class="muted small" href="{% url 'account_reset_password' %}">Забыли пароль?</a>
+                    <a class="muted small" href="{% url 'account_reset_password' %}">Parolni unutdingizmi?</a>
                 </div>
 
-                <button class="btn primary w100" type="submit">Войти</button>
+                <button class="btn primary w100" type="submit">Kirish</button>
             </form>
             <br>
             <div class="auth-foot muted small">
-                Нет аккаунта?
-                <a href="{% url 'scanner:register' %}">Зарегистрироваться</a>
+                Hisobingiz yo‘qmi?
+                <a href="{% url 'scanner:register' %}">Ro‘yxatdan o‘tish</a>
             </div>
         </div>
     </div>

@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% block title %}MalScan • Проверка{% endblock %}
+{% block title %}MalScan • Faylni tekshirish{% endblock %}
 
 {% block content %}
     <div class="section">
     <div class="section-head">
-        <h2>Проверка файла</h2>
+        <h2>Faylni tekshirish</h2>
         <p class="muted">
-            Выберите файл для анализа. Приложение определит тип и рассчитает риск (0–100%) без запуска файла.
+            Tahlil qilish uchun fayl tanlang. Fayl ishga tushirilmaydi; turi aniqlanib, xavf darajasi (0–100%) baholanadi.
         </p>
     </div>
 
@@ -16,24 +16,24 @@
             <div class="form-row">
                 <label class="file-label">
                     <input type="file" name="file" required id="fileInput"/>
-                    <span id="fileName">Выберите файл…</span>
+                    <span id="fileName">Faylni tanlang…</span>
                 </label>
-                <button class="btn primary" type="submit">Анализировать</button>
+                <button class="btn primary" type="submit">Tahlil qilish</button>
             </div>
 
             <div class="hint">
-                <span class="muted">Поддерживаемые форматы зависят от установленных моделей.</span>
-                <span class="muted">Сейчас обычно:</span>
+                <span class="muted">Qo‘llanadigan formatlar o‘rnatilgan modellarga bog‘liq.</span>
+                <span class="muted">Hozircha:</span>
                 <b>.apk</b>, <b>.pdf</b>
             </div>
         </form>
 
-        <div id="progressWrap" class="progress hidden" aria-label="progress">
+        <div id="progressWrap" class="progress hidden" aria-label="Jarayon">
             <div class="bar" id="progressBar"></div>
         </div>
 
         <div class="muted small" style="margin-top:10px;">
-            Совет: не загружайте конфиденциальные данные. Анализ статический — файлы не выполняются.
+            Maslahat: maxfiy ma’lumotlarni yuklamang. Tahlil statik tarzda bajariladi, fayllar ishga tushirilmaydi.
         </div>
     </div>
 {% endblock %}
@@ -48,7 +48,7 @@
             const bar = document.getElementById('progressBar');
 
             input.addEventListener('change', () => {
-                name.textContent = input.files?.[0]?.name || 'Выберите файл…';
+                name.textContent = input.files?.[0]?.name || 'Faylni tanlang…';
             });
 
             form.addEventListener('submit', () => {

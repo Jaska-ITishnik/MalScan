@@ -1,9 +1,9 @@
 {
   "version": "v1",
   "notes": [
-    "Trained on EMBER2024 vectorized features.",
-    "Runtime inference uses thrember.features.PEFeatureExtractor.feature_vector(bytes).",
-    "Current router supports APK and PDF only."
+    "EMBER2024 vektorlangan belgilarida o‘qitilgan.",
+    "Ishlash vaqtida thrember.features.PEFeatureExtractor.feature_vector(bytes) ishlatiladi.",
+    "Hozirgi tahlil yo‘li faqat APK va PDF formatlarini qo‘llaydi."
   ],
   "models": {
     "apk": {

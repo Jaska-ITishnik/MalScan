@@ -8,7 +8,7 @@
   new Chart(el, {
     type: "doughnut",
     data: {
-      labels: ["Malicious probability", "Remaining"],
+      labels: ["Zararli bo‘lish ehtimoli", "Qolgan qismi"],
       datasets: [{
         data: [score, benign],
       }]

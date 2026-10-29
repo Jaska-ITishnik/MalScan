@@ -1,1 +1,1 @@
-Run: python manage.py train_model --csv dataset.csv to generate model.joblib and feature_schema.json
+APK va PDF modellarini qayta yaratish uchun README.md faylidagi modellarni qayta o‘qitish bo‘limiga qarang.

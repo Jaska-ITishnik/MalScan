@@ -9,7 +9,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, roc_auc_score
 
 class Command(BaseCommand):
-    help = "Train sklearn models on vectorized EMBER2024 features (APK + PDF)."
+    help = "Vektorlangan EMBER2024 belgilarida APK va PDF modellarini o‘qitadi."
 
     def add_arguments(self, parser):
         parser.add_argument("--apk_dir", required=True)
@@ -37,17 +37,17 @@ class Command(BaseCommand):
         proba = clf.predict_proba(X_test)[:, 1]
         pred = (proba >= 0.5).astype(int)
 
-        self.stdout.write(self.style.SUCCESS(f"\n{name} evaluation:"))
+        self.stdout.write(self.style.SUCCESS(f"\n{name} modeli baholash natijalari:"))
         self.stdout.write(classification_report(y_test, pred, digits=4))
         try:
             auc = roc_auc_score(y_test, proba)
-            self.stdout.write(self.style.SUCCESS(f"ROC-AUC: {auc:.4f}"))
+            self.stdout.write(self.style.SUCCESS(f"ROC-AUC ko‘rsatkichi: {auc:.4f}"))
         except Exception:
             pass
 
         out_path.parent.mkdir(parents=True, exist_ok=True)
         joblib.dump(clf, out_path)
-        self.stdout.write(self.style.SUCCESS(f"Saved: {out_path}"))
+        self.stdout.write(self.style.SUCCESS(f"Saqlandi: {out_path}"))
 
         return {
             "name": name,
@@ -63,9 +63,9 @@ class Command(BaseCommand):
         meta = {
             "version": "v1",
             "notes": [
-                "Trained on EMBER2024 vectorized features.",
-                "Runtime inference uses thrember.features.PEFeatureExtractor.feature_vector(bytes).",
-                "Current router supports APK and PDF only.",
+                "EMBER2024 vektorlangan belgilarida o‘qitilgan.",
+                "Ishlash vaqtida thrember.features.PEFeatureExtractor.feature_vector(bytes) ishlatiladi.",
+                "Hozirgi tahlil yo‘li faqat APK va PDF formatlarini qo‘llaydi.",
             ],
             "models": {},
         }
@@ -74,4 +74,4 @@ class Command(BaseCommand):
         meta["models"]["pdf"] = self._train_one("PDF", opts["pdf_dir"], settings.PDF_MODEL_PATH, opts["max_iter"])
 
         settings.MODEL_META_PATH.write_text(json.dumps(meta, indent=2), encoding="utf-8")
-        self.stdout.write(self.style.SUCCESS(f"Saved meta: {settings.MODEL_META_PATH}"))
+        self.stdout.write(self.style.SUCCESS(f"Model ma’lumotlari saqlandi: {settings.MODEL_META_PATH}"))

@@ -1,8 +1,15 @@
-# MalScan (Django 6.0, Class-Based Views)
+# MalScan — zararli fayllarni statik tahlil qilish
 
-ML-based static malware analysis web app (no registration).
+MalScan APK va PDF fayllarni ishga tushirmasdan tahlil qiladi, ML modeli yordamida xavf darajasini baholaydi va topilgan belgilarni tushuntiradi.
 
-## Install (Linux)
+## Talablar
+
+- Python 3.12
+- PostgreSQL
+- Linux tizimida `libmagic1`
+
+## O‘rnatish
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
@@ -10,30 +17,36 @@ pip install -r requirements.txt
 sudo apt-get install -y libmagic1
 ```
 
-## Migrate DB
+`root/settings.py` PostgreSQL ulanishi uchun `.env` faylidagi `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST` va `DB_PORT` qiymatlarini kutadi. `.env` faylini har bir muhit uchun alohida yarating; u GitHub’ga yuklanmaydi.
+
+## Ma’lumotlar bazasini tayyorlash
+
 ```bash
-python manage.py makemigrations
 python manage.py migrate
 ```
 
-## Train ML model
-Create `dataset.csv` with columns: `path,label` (label 0=benign, 1=malicious), then:
-```bash
-python manage.py train_model --csv dataset.csv
-```
+## Ishga tushirish
 
-This will create:
-- `artifacts/model.joblib`
-- `artifacts/feature_schema.json`
-
-## Run
 ```bash
 python manage.py runserver 0.0.0.0:8000
 ```
 
-Open: `http://SERVER_IP:8000/`
+Brauzerda `http://127.0.0.1:8000/` manzilini oching.
 
-## Notes
-- Files are never executed.
-- This MVP uses generic static features (entropy, strings, URL/IP counts, byte histogram).
-- Add file-type plugins (PE/PDF/Office) later for better accuracy.
+## Modellarni qayta o‘qitish (ixtiyoriy)
+
+O‘qitish uchun EMBER2024 to‘plamlarini yuklab olib, vektorlash va o‘qitish buyruqlarini bajaring:
+
+```bash
+python manage.py ember2024_download --apk_dir data/ember2024_apk --pdf_dir data/ember2024_pdf
+python manage.py ember2024_vectorize --apk_dir data/ember2024_apk --pdf_dir data/ember2024_pdf
+python manage.py ember2024_train --apk_dir data/ember2024_apk --pdf_dir data/ember2024_pdf
+```
+
+O‘qitilgan modellar `artifacts/` papkasiga saqlanadi. Oddiy ishga tushirish uchun ma’lumotlar to‘plamlarini yuklash shart emas.
+
+## Eslatmalar
+
+- Fayllar ishga tushirilmaydi; faqat statik tahlil qilinadi.
+- Hozir APK va PDF formatlari tahlil qilinadi.
+- Tahlil natijasi ehtimoliy xavfni bildiradi va fayl xavfsizligini mutlaq kafolatlamaydi.

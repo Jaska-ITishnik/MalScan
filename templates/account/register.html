@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load socialaccount %}
 
-{% block title %}MalScan • Регистрация{% endblock %}
+{% block title %}MalScan • Ro‘yxatdan o‘tish{% endblock %}
 
 {% block content %}
     <div class="section auth">
@@ -15,16 +15,16 @@
                 {% endfor %}
             {% endif %}
             <div class="auth-head">
-                <h2>Регистрация</h2>
-                <p class="muted">Создайте аккаунт или используйте Google.</p>
+                <h2>Ro‘yxatdan o‘tish</h2>
+                <p class="muted">Hisob yarating yoki Google orqali kiring.</p>
             </div>
 
             <a class="btn google" href="{% provider_login_url 'google' %}">
                 <span class="g-icon" aria-hidden="true">G</span>
-                Продолжить с Google
+                Google orqali davom etish
             </a>
 
-            <div class="divider"><span>или</span></div>
+            <div class="divider"><span>yoki</span></div>
 
             <form method="post" action="{% url 'scanner:register' %}" class="auth-form">
                 {% csrf_token %}
@@ -34,12 +34,12 @@
                 {% endif %}
 
                 <label class="field">
-                    <span class="label">Имя пользователя</span>
+                    <span class="label">Foydalanuvchi nomi</span>
                     {{ form.username }}
                 </label>
 
                 <label class="field" type="password">
-                    <span class="label">Пароль</span>
+                    <span class="label">Parol</span>
                     <div class="password-wrapper">
                         {{ form.password }}
                         <button type="button" class="toggle-password" onclick="togglePasswordVisibility(this)">
@@ -49,7 +49,7 @@
                 </label>
 
                 <label class="field">
-                    <span class="label">Повтор пароля</span>
+                    <span class="label">Parolni qayta kiriting</span>
                     <div class="password-wrapper">
                         {{ form.confirm_password }}
                         <button type="button" class="toggle-password" onclick="togglePasswordVisibility(this)">
@@ -58,12 +58,12 @@
                     </div>
                 </label>
 
-                <button class="btn primary w100" type="submit">Создать аккаунт</button>
+                <button class="btn primary w100" type="submit">Hisob yaratish</button>
             </form>
             <br>
             <div class="auth-foot muted small">
-                Уже есть аккаунт?
-                <a href="{% url 'scanner:login' %}">Войти</a>
+                Hisobingiz bormi?
+                <a href="{% url 'scanner:login' %}">Kirish</a>
             </div>
         </div>
     </div>

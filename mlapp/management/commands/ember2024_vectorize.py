@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
-    help = "Vectorize EMBER2024 raw features into X_*.dat / y_*.dat for APK+PDF (skip challenge if missing)."
+    help = "EMBER2024 APK va PDF belgilarini X_*.dat / y_*.dat vektorlariga aylantiradi."
 
     def add_arguments(self, parser):
         parser.add_argument("--apk_dir", required=True)
@@ -15,32 +15,32 @@ class Command(BaseCommand):
         return all((p / name).exists() for name in ("X_train.dat", "y_train.dat", "X_test.dat", "y_test.dat"))
 
     def _safe_vectorize(self, thrember, data_dir: str, label_type: str, title: str):
-        # Если уже есть .dat — можно не делать заново
+        # .dat fayllari mavjud bo‘lsa, qayta vektorlash shart emas.
         if self._has_vectorized(data_dir):
-            self.stdout.write(self.style.SUCCESS(f"{title}: already vectorized (X_/y_ .dat exist)"))
+            self.stdout.write(self.style.SUCCESS(f"{title}: vektorlar avvaldan tayyor (X_/y_ .dat mavjud)."))
             return
 
-        self.stdout.write(self.style.WARNING(f"Vectorizing {title} ({label_type})..."))
+        self.stdout.write(self.style.WARNING(f"{title} vektorlanmoqda ({label_type})..."))
 
         try:
             thrember.create_vectorized_features(data_dir, label_type=label_type)
-            self.stdout.write(self.style.SUCCESS(f"{title}: vectorization complete"))
+            self.stdout.write(self.style.SUCCESS(f"{title}: vektorlash tugadi."))
             return
 
         except ValueError as e:
-            # thrember падает если нет challenge jsonl
+            # challenge JSONL fayli bo‘lmasa, thrember xatolik qaytarishi mumkin.
             msg = str(e)
             if "Did not find any .jsonl files" not in msg:
                 raise
 
-            # train/test уже могли успеть создаться; просто продолжаем
+            # O‘quv va sinov vektorlari yaratilgan bo‘lsa, davom etamiz.
             if self._has_vectorized(data_dir):
                 self.stdout.write(self.style.WARNING(
-                    f"{title}: challenge split not found, but train/test vectorized OK — skipping challenge."
+                    f"{title}: challenge bo‘limi topilmadi, ammo o‘quv va sinov vektorlari tayyor — davom etilmoqda."
                 ))
                 return
 
-            # если даже train/test не создались — значит проблема не только в challenge
+            # O‘quv va sinov vektorlari ham yaratilmagan bo‘lsa, boshqa xatolik yuz bergan.
             raise
 
     def handle(self, *args, **opts):
@@ -49,4 +49,4 @@ class Command(BaseCommand):
         label_type = opts["label_type"]
         self._safe_vectorize(thrember, opts["apk_dir"], label_type, "APK")
         self._safe_vectorize(thrember, opts["pdf_dir"], label_type, "PDF")
-        self.stdout.write(self.style.SUCCESS("Vectorize step finished."))
+        self.stdout.write(self.style.SUCCESS("Vektorlash yakunlandi."))

@@ -1,34 +1,34 @@
 {% extends "base.html" %}
-{% block title %}MalScan • Результат{% endblock %}
+{% block title %}MalScan • Tahlil natijasi{% endblock %}
 
 {% block content %}
     <div class="section">
         <div class="section-head">
-            <h2>Результат анализа</h2>
+            <h2>Tahlil natijasi</h2>
             <p class="muted">
-                Ниже — информация о файле, итоговая оценка риска и объяснение (понятные причины + категории).
+                Quyida fayl ma’lumotlari, yakuniy xavf bahosi va uning tushunarli izohi keltirilgan.
             </p>
         </div>
 
         <div class="grid">
             <div class="panel">
-                <h3>Файл</h3>
+                <h3>Fayl</h3>
                 <div class="kv">
-                    <div class="k">Имя</div>
+                    <div class="k">Nomi</div>
                     <div class="v">{{ scan.sample.original_name }}</div>
-                    <div class="k">Тип</div>
-                    <div class="v mono">{{ scan.sample.detected_type|default:"—" }}</div>
+                    <div class="k">Turi</div>
+                    <div class="v mono">{% if scan.sample.detected_type == "OTHER" %}Boshqa{% else %}{{ scan.sample.detected_type|default:"—" }}{% endif %}</div>
                     <div class="k">MIME</div>
                     <div class="v mono">{{ scan.sample.mime_type|default:"—" }}</div>
-                    <div class="k">Размер</div>
-                    <div class="v mono">{{ scan.sample.size_bytes }} байт</div>
+                    <div class="k">Hajmi</div>
+                    <div class="v mono">{{ scan.sample.size_bytes }} bayt</div>
                     <div class="k">SHA-256</div>
                     <div class="v mono">{{ scan.sample.sha256 }}</div>
                 </div>
             </div>
 
             <div class="panel">
-                <h3>Вердикт</h3>
+                <h3>Xulosa</h3>
                 <div class="scorebox">
                     <div class="badge big {{ scan.verdict }}">{{ scan.get_verdict_display }}</div>
                     <div class="score">
@@ -37,32 +37,32 @@
                             <div class="meter-bar" style="width: {{ scan.score_percent }}%"></div>
                         </div>
                         <div class="muted small" style="margin-top:6px;">
-                            Риск — это вероятность вредоносности по оценке модели (0–100%).
+                            Xavf — model hisoblagan zararli bo‘lish ehtimoli (0–100%).
                         </div>
                     </div>
                 </div>
 
                 <div class="muted small" style="margin-top:10px;">
-                    Модель: <span class="mono">{{ scan.model_used|default:"—" }}</span>
-                    • Версия: <span class="mono">{{ scan.model_version }}</span>
+                    Model: <span class="mono">{{ scan.model_used|default:"—" }}</span>
+                    • Versiya: <span class="mono">{{ scan.model_version }}</span>
                 </div>
             </div>
         </div>
 
         <div class="panel">
-            <h3>Почему так?</h3>
+            <h3>Nega bunday xulosa chiqdi?</h3>
 
             {% if scan.reasons_json.error %}
                 <p class="danger">{{ scan.reasons_json.error }}</p>
                 <p class="muted small">
-                    Проверьте, что нужная модель лежит в <span class="mono">artifacts/</span>.
+                    Kerakli model <span class="mono">artifacts/</span> papkasida mavjudligini tekshiring.
                 </p>
             {% else %}
                 {% with us=scan.reasons_json.user_summary %}
                     {% if us and us.reasons %}
                         <div class="grid reasons-grid">
                             <div class="panel" style="margin-bottom:0;">
-                                <h3 style="margin-bottom:6px;">Ключевые причины</h3>
+                                <h3 style="margin-bottom:6px;">Asosiy sabablar</h3>
 
                                 <div class="reason-list">
                                     {% for r in us.reasons %}
@@ -75,23 +75,23 @@
                             </div>
 
                             <div class="panel" style="margin-bottom:0;">
-                                <h3 style="margin-bottom:6px;">Категории риска</h3>
+                                <h3 style="margin-bottom:6px;">Xavf toifalari</h3>
                                 {% if us.categories %}
                                     <canvas id="catChart" height="210"></canvas>
                                 {% else %}
-                                    <p class="muted">Категории недоступны.</p>
+                                    <p class="muted">Toifalar mavjud emas.</p>
                                 {% endif %}
                             </div>
                         </div>
 
                         <div class="panel" style="margin-top:12px;">
-                            <h3 style="margin-bottom:6px;">Причины (график)</h3>
+                            <h3 style="margin-bottom:6px;">Sabablar grafigi</h3>
                             <canvas id="reasonChart" height="120"></canvas>
                         </div>
 
                     {% else %}
                         <p class="muted">
-                            Для этого типа файла пока нет человеко-понятных причин. Ниже доступны технические детали.
+                            Bu fayl turi uchun tushunarli izoh topilmadi. Quyida texnik ma’lumotlar mavjud.
                         </p>
                     {% endif %}
                 {% endwith %}
@@ -99,8 +99,8 @@
         </div>
 
         <div class="actions">
-            <a class="btn primary" href="/scan/">Проверить ещё файл</a>
-            <a class="btn" href="/history/">История</a>
+            <a class="btn primary" href="/scan/">Yana fayl tekshirish</a>
+            <a class="btn" href="/history/">Tarix</a>
         </div>
     </div>
 {% endblock %}

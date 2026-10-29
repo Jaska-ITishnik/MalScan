@@ -25,6 +25,6 @@ class DeviceIdMiddleware:
                 max_age=DEVICE_COOKIE_AGE,
                 httponly=True,
                 samesite="Lax",
-                secure=False,  # True если HTTPS
+                secure=False,  # HTTPS yoqilganda True qilib qo‘ying.
             )
         return response

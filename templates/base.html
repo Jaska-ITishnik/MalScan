@@ -1,6 +1,6 @@
 {% load static %}
 <!doctype html>
-<html lang="ru">
+<html lang="uz">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -21,8 +21,8 @@
         </button>
 
         <nav class="nav" id="mainNav">
-            <a href="{% url 'scanner:upload' %}">Проверка</a>
-            <a href="{% url 'scanner:history' %}">История</a>
+            <a href="{% url 'scanner:upload' %}">Tekshirish</a>
+            <a href="{% url 'scanner:history' %}">Tarix</a>
             {% if user.is_authenticated %}
                 <div class="profile" id="profileMenu">
                     <button class="profile-btn" type="button">
@@ -31,12 +31,12 @@
                         <span class="chev">▾</span>
                     </button>
                     <div class="profile-dd">
-                        <a href="{% url 'scanner:history' %}">Мои результаты</a>
-                        <a href="{% url 'scanner:logout' %}">Выйти</a>
+                        <a href="{% url 'scanner:history' %}">Natijalarim</a>
+                        <a href="{% url 'scanner:logout' %}">Chiqish</a>
                     </div>
                 </div>
             {% else %}
-                <a class="btn small" href="{% url 'scanner:login' %}">Войти</a>
+                <a class="btn small" href="{% url 'scanner:login' %}">Kirish</a>
             {% endif %}
         </nav>
     </div>
@@ -51,37 +51,37 @@
         <div class="footer-grid">
             <div class="footer-brand">
                 <a class="footer-logo" href="{% url 'scanner:home' %}">
-                    <img src="{% static 'scanner/updated_logo-removebg-preview.png' %}" width="170" alt="MalScan logo">
+                    <img src="{% static 'scanner/updated_logo-removebg-preview.png' %}" width="170" alt="MalScan logotipi">
                 </a>
 
                 <p class="footer-text">
-                    MalScan — современная платформа для анализа файлов и выявления вредоносного ПО
-                    с использованием EMBERv3 и моделей машинного обучения.
+                    MalScan — fayllarni tahlil qilish va zararli dasturlarni aniqlash uchun EMBERv3 hamda mashinaviy
+                    o‘rganish modellaridan foydalanadigan zamonaviy platforma.
                 </p>
 
                 <div class="footer-badges">
-                    <span class="footer-badge">Анализ угроз</span>
-                    <span class="footer-badge">ML-сканирование</span>
-                    <span class="footer-badge">Безопасность файлов</span>
+                    <span class="footer-badge">Tahdidlarni tahlil qilish</span>
+                    <span class="footer-badge">ML tahlili</span>
+                    <span class="footer-badge">Fayllar xavfsizligi</span>
                 </div>
             </div>
 
             <div class="footer-col">
-                <h4>Навигация</h4>
+                <h4>Bo‘limlar</h4>
                 <div class="footer-links-col">
-                    <a href="{% url 'scanner:home' %}">Главная</a>
-                    <a href="{% url 'scanner:upload' %}">Проверка файла</a>
-                    <a href="{% url 'scanner:history' %}">История проверок</a>
-                    <a href="{% url 'scanner:privacy' %}">Политика конфиденциальности</a>
-                    <a href="{% url 'scanner:terms' %}">Условия использования</a>
+                    <a href="{% url 'scanner:home' %}">Bosh sahifa</a>
+                    <a href="{% url 'scanner:upload' %}">Faylni tekshirish</a>
+                    <a href="{% url 'scanner:history' %}">Tekshiruvlar tarixi</a>
+                    <a href="{% url 'scanner:privacy' %}">Maxfiylik siyosati</a>
+                    <a href="{% url 'scanner:terms' %}">Foydalanish shartlari</a>
                 </div>
             </div>
 
         </div>
 
         <div class="footer-bottom">
-            <span>© 2026 MalScan. Все права защищены.</span>
-            <span>Разработано для интеллектуального анализа и безопасной проверки файлов.</span>
+            <span>© 2026 MalScan. Barcha huquqlar himoyalangan.</span>
+            <span>Fayllarni aqlli tahlil qilish va xavfsiz tekshirish uchun yaratilgan.</span>
         </div>
     </div>
 </footer>

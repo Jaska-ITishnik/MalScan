@@ -8,7 +8,7 @@ class Sample(Model):
     original_name = CharField(max_length=255, verbose_name="Fayl nomi")
     stored_file = FileField(upload_to="uploads/%Y/%m/%d/", verbose_name="Fayl", validators=[validate_file_size])
     owner = ForeignKey("auth.User", on_delete=CASCADE, null=True)
-    device_id = CharField(max_length=64, blank=True, default="", db_index=True, verbose_name="Device ID")
+    device_id = CharField(max_length=64, blank=True, default="", db_index=True, verbose_name="Qurilma identifikatori")
     size_bytes = BigIntegerField(default=0, verbose_name="Hajm (bayt)")
     sha256 = CharField(max_length=64, blank=True, default="", verbose_name="SHA-256")
     mime_type = CharField(max_length=120, blank=True, default="", verbose_name="MIME")
@@ -25,10 +25,10 @@ class Sample(Model):
 
 class Scan(Model):
     class VerdictChoice(TextChoices):
-        BENIGN = "benign", "Чисто"
-        SUSPICIOUS = "suspicious", "Подозрительно"
-        MALICIOUS = "malicious", "Вредоносно"
-        UNKNOWN = "unknown", "Неизвестно"
+        BENIGN = "benign", "Xavfsiz"
+        SUSPICIOUS = "suspicious", "Shubhali"
+        MALICIOUS = "malicious", "Zararli"
+        UNKNOWN = "unknown", "Noma’lum"
 
     sample = ForeignKey(Sample, on_delete=CASCADE, related_name="scans", verbose_name="Namuna")
     score_percent = PositiveIntegerField(default=0, verbose_name="Ball (%)")

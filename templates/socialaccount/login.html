@@ -2,31 +2,31 @@
 {% load i18n %}
 {% load socialaccount %}
 
-{% block title %}MalScan • Вход через Google{% endblock %}
+{% block title %}MalScan • Google orqali kirish{% endblock %}
 
 {% block content %}
     <div class="section auth">
         <div class="auth-card">
             <div class="auth-head">
-                <h2>Вход через Google</h2>
+                <h2>Google orqali kirish</h2>
                 <p class="muted">
-                    Вы собираетесь войти в систему с помощью аккаунта Google.
+                    Google hisobingiz orqali tizimga kirmoqchisiz.
                 </p>
             </div>
 
-            <div class="divider"><span>подтверждение</span></div>
+            <div class="divider"><span>tasdiqlash</span></div>
 
             <form method="post">
                 {% csrf_token %}
                 <button class="btn primary w100" type="submit">
-                    Продолжить через Google
+                    Google orqali davom etish
                 </button>
             </form>
 
             <br>
 
             <div class="auth-foot muted small">
-                <a href="{% url 'scanner:login' %}">Назад ко входу</a>
+                <a href="{% url 'scanner:login' %}">Kirish sahifasiga qaytish</a>
             </div>
         </div>
     </div>

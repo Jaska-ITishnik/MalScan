@@ -14,6 +14,7 @@ from django.views.generic import FormView, DetailView, ListView, TemplateView, C
 from mlapp.inference import infer
 from scanner.forms import UploadFileForm, LoginModelForm, RegisterModelFrom
 from scanner.models import Scan, Sample
+from scanner.localization import localize_saved_scan
 from scanner.utils import sha256_file
 
 
@@ -31,12 +32,12 @@ class RegisterFormView(CreateView):
     success_url = reverse_lazy("scanner:login")
 
     def form_valid(self, form):
-        text = "Вы успешно зарегистрировались в систему📣"
-        messages.add_message(self.request, messages.WARNING, text)
+        text = "Ro‘yxatdan muvaffaqiyatli o‘tdingiz."
+        messages.add_message(self.request, messages.SUCCESS, text)
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        text = "⚠Пользователь с таким именем пользователя уже существует."
+        text = "Ma’lumotlarni tekshiring va qayta urinib ko‘ring."
         messages.add_message(self.request, messages.WARNING, text)
         return super().form_invalid(form)
 
@@ -48,8 +49,8 @@ class LoginRegisterView(FormView):
     def form_valid(self, form):
         user = form.get_user()
         login(self.request, user)
-        text = "Вы успешно вошли в систему📣"
-        messages.add_message(self.request, messages.WARNING, text)
+        text = "Tizimga muvaffaqiyatli kirdingiz."
+        messages.add_message(self.request, messages.SUCCESS, text)
         return redirect('scanner:home')
 
     def form_invalid(self, form):
@@ -161,6 +162,11 @@ class ScanDetailView(DetailView):
     model = Scan
     template_name = "scanner/scan_detail.html"
     context_object_name = "scan"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        localize_saved_scan(context["scan"])
+        return context
 
 
 class HistoryView(ListView):

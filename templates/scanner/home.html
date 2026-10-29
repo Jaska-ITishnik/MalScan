@@ -1,39 +1,38 @@
 {% extends "base.html" %}
-{% block title %}MalScan • Главная{% endblock %}
+{% block title %}MalScan • Bosh sahifa{% endblock %}
 
 {% block content %}
     <section class="hero">
         <br>
         <div class="hero-top">
             <div>
-                <h1>MalScan — анализ файлов и оценка вредоносности</h1>
+                <h1>MalScan — fayllarni tahlil qilish va zararli ekanini baholash</h1>
                 <p class="lead">
-                    Веб-приложение для статического анализа файлов: определяем тип, извлекаем признаки и считаем риск
-                    (0–100%)
-                    с объяснением причин. Без запуска файлов.
+                    Fayllarni ishga tushirmasdan statik tahlil qilamiz: turini aniqlaymiz, belgilarini ajratamiz va
+                    xavf darajasini (0–100%) sabablarini ko‘rsatgan holda baholaymiz.
                 </p>
 
                 <div class="hero-actions">
-                    <a class="btn primary" href="/scan/">Проверить файл</a>
-                    <a class="btn" href="/history/">История</a>
+                    <a class="btn primary" href="/scan/">Faylni tekshirish</a>
+                    <a class="btn" href="/history/">Tarix</a>
                 </div>
 
                 <div class="badges">
-                    <span class="tag">Статический анализ</span>
-                    <span class="tag">ML-скоринг</span>
-                    <span class="tag">Объяснимый результат</span>
-                    <span class="tag">Расширяемые форматы</span>
+                    <span class="tag">Statik tahlil</span>
+                    <span class="tag">ML baholash</span>
+                    <span class="tag">Tushunarli natija</span>
+                    <span class="tag">Yangi formatlar qo‘shish mumkin</span>
                 </div>
             </div>
 
             <div class="hero-card">
                 <div class="hero-card-head">
-                    <div class="hc-title">Что вы получите</div>
-                    <div class="hc-sub">после загрузки файла</div>
+                    <div class="hc-title">Nimalarni bilib olasiz</div>
+                    <div class="hc-sub">fayl yuklangandan so‘ng</div>
                 </div>
 
                 <div class="hc-metric">
-                    <div class="hc-metric-label">Риск</div>
+                    <div class="hc-metric-label">Xavf</div>
                     <div class="hc-metric-value">0–100%</div>
                 </div>
 
@@ -41,28 +40,28 @@
                     <div class="hc-item">
                         <div class="hc-dot"></div>
                         <div>
-                            <div class="hc-item-title">Вердикт</div>
-                            <div class="hc-item-text">benign / suspicious / malicious</div>
+                            <div class="hc-item-title">Xulosa</div>
+                            <div class="hc-item-text">xavfsiz / shubhali / zararli</div>
                         </div>
                     </div>
                     <div class="hc-item">
                         <div class="hc-dot"></div>
                         <div>
-                            <div class="hc-item-title">Причины</div>
-                            <div class="hc-item-text">топ факторов, влияющих на оценку</div>
+                            <div class="hc-item-title">Sabablar</div>
+                            <div class="hc-item-text">bahoga ta’sir qilgan asosiy belgilar</div>
                         </div>
                     </div>
                     <div class="hc-item">
                         <div class="hc-dot"></div>
                         <div>
-                            <div class="hc-item-title">Метаданные</div>
-                            <div class="hc-item-text">хеш, MIME, размер, тип файла</div>
+                            <div class="hc-item-title">Fayl ma’lumotlari</div>
+                            <div class="hc-item-text">xesh, MIME, hajm va fayl turi</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="hc-foot muted">
-                    Совет: для лучших результатов используйте актуальные версии моделей.
+                    Maslahat: aniqroq natijalar uchun modellarning yangilangan versiyalaridan foydalaning.
                 </div>
             </div>
         </div>
@@ -70,65 +69,63 @@
 
     <section class="section">
         <div class="section-head">
-            <h2>Поддерживаемые форматы</h2>
+            <h2>Qo‘llab-quvvatlanadigan formatlar</h2>
             <p class="muted">
-                Архитектура модульная: для каждого типа файла подключается своя модель и набор признаков.
-                Сейчас могут быть активны не все модули — список расширяется.
+                Tizim modulli tuzilgan: har bir fayl turi uchun alohida model va belgilar to‘plami ishlatiladi.
+                Hozir ayrim modullar faol, qo‘llanadigan turlar ro‘yxati kengayib boradi.
             </p>
         </div>
 
         <div class="cards grid-4">
             <div class="card">
                 <h3>APK</h3>
-                <p>Android-пакеты. Детекция по признакам EMBERv3/thrember.</p>
-                <div class="pill">Модуль активен</div>
+                <p>Android ilova paketlari. EMBERv3/thrember belgilari asosida tahlil qilinadi.</p>
+                <div class="pill">Faol</div>
             </div>
 
             <div class="card">
                 <h3>PDF</h3>
-                <p>Документы PDF. ML-оценка + индикаторы содержимого.</p>
-                <div class="pill">Модуль активен</div>
+                <p>PDF hujjatlari. ML baholash va fayl ichidagi belgilar tahlili.</p>
+                <div class="pill">Faol</div>
             </div>
 
             <div class="card">
                 <h3>PE (EXE/DLL)</h3>
-                <p>Windows-исполняемые файлы и библиотеки.</p>
-                <div class="pill ghost">Скоро</div>
+                <p>Windows dasturlari va kutubxonalari.</p>
+                <div class="pill ghost">Tez orada</div>
             </div>
 
             <div class="card">
                 <h3>ELF</h3>
-                <p>Linux-бинарники и компоненты.</p>
-                <div class="pill ghost">Скоро</div>
+                <p>Linux dasturlari va tarkibiy qismlari.</p>
+                <div class="pill ghost">Tez orada</div>
             </div>
         </div>
 
         <div class="muted small" style="margin-top:10px;">
-            *При загрузке неподдерживаемого типа файл сохраняется и будет отображён как “Unknown” до подключения
-            соответствующего модуля.
+            *Qo‘llab-quvvatlanmaydigan turdagi fayl yuklansa, mos modul qo‘shilguncha “Noma’lum” deb ko‘rsatiladi.
         </div>
     </section>
 
     <section class="section">
         <div class="section-head">
-            <h2>Как работает анализ</h2>
+            <h2>Tahlil qanday ishlaydi</h2>
         </div>
 
         <div class="steps">
             <div class="step">
                 <div class="step-num">1</div>
                 <div>
-                    <div class="step-title">Определение типа</div>
-                    <div class="step-text muted">По расширению и MIME выбирается пайплайн (APK/PDF/PE/ELF/…).</div>
+                    <div class="step-title">Fayl turini aniqlash</div>
+                    <div class="step-text muted">Kengaytma va MIME turiga qarab tahlil yo‘li tanlanadi (APK/PDF/PE/ELF/…).</div>
                 </div>
             </div>
 
             <div class="step">
                 <div class="step-num">2</div>
                 <div>
-                    <div class="step-title">Извлечение признаков</div>
-                    <div class="step-text muted">Строится вектор признаков (например EMBERv3/thrember) для выбранного
-                        типа.
+                    <div class="step-title">Belgilarni ajratish</div>
+                    <div class="step-text muted">Tanlangan tur uchun belgilar vektori (masalan, EMBERv3/thrember) tuziladi.
                     </div>
                 </div>
             </div>
@@ -136,16 +133,16 @@
             <div class="step">
                 <div class="step-num">3</div>
                 <div>
-                    <div class="step-title">ML-скоринг</div>
-                    <div class="step-text muted">Модель выдаёт вероятность вредоносности → переводим в 0–100%.</div>
+                    <div class="step-title">ML baholash</div>
+                    <div class="step-text muted">Model zararli bo‘lish ehtimolini hisoblab, 0–100% oralig‘ida ko‘rsatadi.</div>
                 </div>
             </div>
 
             <div class="step">
                 <div class="step-num">4</div>
                 <div>
-                    <div class="step-title">Объяснение результата</div>
-                    <div class="step-text muted">Показываем ключевые факторы, влияющие на решение (для прозрачности).
+                    <div class="step-title">Natijani tushuntirish</div>
+                    <div class="step-text muted">Xulosaga ta’sir qilgan asosiy belgilarni ko‘rsatamiz.
                     </div>
                 </div>
             </div>
@@ -154,23 +151,22 @@
 
     <section class="section">
         <div class="section-head">
-            <h2>Безопасность</h2>
-            <p class="muted">Проект спроектирован так, чтобы минимизировать риск при работе с потенциально опасными
-                файлами.</p>
+            <h2>Xavfsizlik</h2>
+            <p class="muted">Tizim ehtimoliy xavfli fayllar bilan ishlashdagi xatarlarni kamaytirish uchun yaratilgan.</p>
         </div>
 
         <div class="cards grid-3">
             <div class="card">
-                <h3>Файлы не выполняются</h3>
-                <p>Анализ только статический: чтение байтов и извлечение признаков.</p>
+                <h3>Fayllar ishga tushirilmaydi</h3>
+                <p>Faqat statik tahlil qilinadi: baytlar o‘qiladi va belgilar ajratiladi.</p>
             </div>
             <div class="card">
-                <h3>Изоляция хранения</h3>
-                <p>Загрузки сохраняются вне статических директорий; можно вынести на отдельный диск/путь.</p>
+                <h3>Alohida saqlash</h3>
+                <p>Yuklangan fayllar statik fayllar joylashgan papkadan alohida saqlanadi.</p>
             </div>
             <div class="card">
-                <h3>Трассируемость</h3>
-                <p>Сохраняются хеши и результаты проверок для истории и аудита.</p>
+                <h3>Tekshiruvlar tarixi</h3>
+                <p>Tarix va kuzatuv uchun xeshlar hamda tekshiruv natijalari saqlanadi.</p>
             </div>
         </div>
     </section>
@@ -178,12 +174,12 @@
     <section class="section cta">
         <div class="cta-inner">
             <div>
-                <h2>Готовы проверить файл?</h2>
-                <p class="muted">Начните с одного файла — результат появится сразу в удобном отчёте.</p>
+                <h2>Faylni tekshirishga tayyormisiz?</h2>
+                <p class="muted">Bitta fayldan boshlang — natija qulay hisobot shaklida ko‘rsatiladi.</p>
             </div>
             <div class="cta-actions">
-                <a class="btn primary" href="/scan/">Проверить файл</a>
-                <a class="btn" href="/history/">Посмотреть историю</a>
+                <a class="btn primary" href="/scan/">Faylni tekshirish</a>
+                <a class="btn" href="/history/">Tarixni ko‘rish</a>
             </div>
         </div>
     </section>

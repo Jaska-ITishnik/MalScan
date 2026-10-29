@@ -71,7 +71,7 @@ def predict_bytes(file_bytes: bytes, model_path: Path, model_name: str) -> tuple
 
     model = load_model(model_path)
     if model is None:
-        return 0, "unknown", {"error": f"Model is missing: {model_path.name}. Put it into artifacts/ or retrain."}
+        return 0, "unknown", {"error": f"{model_path.name} modeli topilmadi. Uni artifacts/ papkasiga joylang yoki qayta o‘qiting."}
 
     if hasattr(model, "predict_proba"):
         p = float(model.predict_proba(vec.reshape(1, -1))[0, 1])
@@ -79,7 +79,7 @@ def predict_bytes(file_bytes: bytes, model_path: Path, model_name: str) -> tuple
         z = float(model.decision_function(vec.reshape(1, -1))[0])
         p = 1.0 / (1.0 + np.exp(-z))
     else:
-        return 0, "unknown", {"error": "Model must support predict_proba or decision_function"}
+        return 0, "unknown", {"error": "Model predict_proba yoki decision_function usullaridan birini qo‘llashi kerak."}
 
     score = int(round(p * 100))
     verdict = verdict_from_score(score)
@@ -89,8 +89,8 @@ def predict_bytes(file_bytes: bytes, model_path: Path, model_name: str) -> tuple
         # technical (keep for debug)
         "top_contributions": _top_linear_contribs(model, vec, top_k=10),
         "notes": [
-            "Features are EMBERv3/thrember vectors. 'f0..fN' are vector indices.",
-            "Human-readable reasons are provided in reasons['user_summary'] (evidence-based).",
+            "Belgilar EMBERv3/thrember vektorlari. f0..fN — vektor elementlari indekslari.",
+            "Tushunarli izohlar dalillarga asoslangan reasons['user_summary'] maydonida beriladi.",
         ],
     }
     return score, verdict, reasons
@@ -129,5 +129,5 @@ def infer(file_path: str, mime_type: str, apk_model_path: Path, pdf_model_path: 
         return InferenceResult("PDF", score, verdict, "pdf", reasons)
 
     return InferenceResult("OTHER", 0, "unknown", "", {
-        "error": "Unsupported file type. Add a new model + evidence extractor and update router."
+        "error": "Bu fayl turi qo‘llab-quvvatlanmaydi. Uni tahlil qilish uchun model va belgi ajratgich qo‘shish kerak."
     })

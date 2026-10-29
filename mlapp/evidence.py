@@ -46,33 +46,33 @@ def explain_pdf(file_bytes: bytes) -> dict:
     ent = shannon_entropy(b)
 
     reasons = []
-    categories = {"Сеть": 0, "Скрипты": 0, "Вложения": 0, "Обфускация": 0}
+    categories = {"Tarmoq": 0, "Skriptlar": 0, "Biriktirmalar": 0, "Yashirish": 0}
 
     if urls:
-        reasons.append({"title": "Ссылки в документе", "detail": f"Найдено URL: {len(urls)}", "severity": "high"})
-        categories["Сеть"] += 35
+        reasons.append({"title": "Hujjatdagi havolalar", "detail": f"Topilgan URL manzillari: {len(urls)}", "severity": "high"})
+        categories["Tarmoq"] += 35
     if ips:
-        reasons.append({"title": "IP-адреса", "detail": f"Найдено IP: {len(ips)}", "severity": "medium"})
-        categories["Сеть"] += 15
+        reasons.append({"title": "IP manzillar", "detail": f"Topilgan IP manzillar: {len(ips)}", "severity": "medium"})
+        categories["Tarmoq"] += 15
 
     if hits["javascript"] > 0:
-        reasons.append({"title": "JavaScript в PDF", "detail": "Обнаружены JS-маркеры", "severity": "high"})
-        categories["Скрипты"] += 40
+        reasons.append({"title": "PDF ichida JavaScript", "detail": "JavaScript belgilariga mos yozuvlar topildi.", "severity": "high"})
+        categories["Skriptlar"] += 40
     if hits["open_action"] > 0:
-        reasons.append({"title": "Автодействия (OpenAction/AA)", "detail": "Действия при открытии", "severity": "high"})
-        categories["Скрипты"] += 25
+        reasons.append({"title": "Avtomatik amallar (OpenAction/AA)", "detail": "Fayl ochilganda ishga tushadigan amallar topildi.", "severity": "high"})
+        categories["Skriptlar"] += 25
     if hits["launch"] > 0:
-        reasons.append({"title": "Launch Action", "detail": "Признаки запуска внешних действий", "severity": "high"})
-        categories["Скрипты"] += 40
+        reasons.append({"title": "Tashqi amalni ishga tushirish", "detail": "Tashqi buyruq yoki amalni ishga tushirish belgisi topildi.", "severity": "high"})
+        categories["Skriptlar"] += 40
 
     if hits["embedded"] > 0:
-        reasons.append({"title": "Встроенные файлы", "detail": "Есть EmbeddedFile/Filespec", "severity": "high"})
-        categories["Вложения"] += 35
+        reasons.append({"title": "Ichiga biriktirilgan fayllar", "detail": "PDF ichida qo‘shimcha fayl biriktirilgan bo‘lishi mumkin.", "severity": "high"})
+        categories["Biriktirmalar"] += 35
 
     if ent >= 7.2:
         reasons.append(
-            {"title": "Высокая энтропия", "detail": f"{ent:.2f} (возможна упаковка/шифрование)", "severity": "medium"})
-        categories["Обфускация"] += 25
+            {"title": "Yuqori entropiya", "detail": f"{ent:.2f} (ma’lumotlar qadoqlangan yoki shifrlangan bo‘lishi mumkin)", "severity": "medium"})
+        categories["Yashirish"] += 25
 
     total = sum(categories.values()) or 1
     cat_list = [{"name": k, "score": int(round(v * 100 / total))} for k, v in categories.items() if v > 0]
@@ -91,7 +91,7 @@ def explain_pdf(file_bytes: bytes) -> dict:
 
 def explain_apk_light(apk_path: str) -> dict:
     reasons = []
-    categories = {"Структура": 0, "Разрешения": 0, "Компоненты": 0, "Сеть и код": 0}
+    categories = {"Tuzilma": 0, "Ruxsatlar": 0, "Komponentlar": 0, "Tarmoq va kod": 0}
     evidence = {
         "archive_entries": 0,
         "dex_files": 0,
@@ -106,7 +106,7 @@ def explain_apk_light(apk_path: str) -> dict:
         "min_sdk": "",
     }
 
-    def add_reason(title: str, detail: str, severity: str = "low", category: str = "Структура", weight: int = 8):
+    def add_reason(title: str, detail: str, severity: str = "low", category: str = "Tuzilma", weight: int = 8):
         reasons.append({"title": title, "detail": detail, "severity": severity})
         categories[category] += weight
 
@@ -126,18 +126,18 @@ def explain_apk_light(apk_path: str) -> dict:
             evidence["encrypted_entry_names"] = encrypted_names[:10]
 
             if "AndroidManifest.xml" not in name_set:
-                add_reason("Нет Android manifest", "В APK не найден AndroidManifest.xml; файл не похож на обычный Android-пакет.", "high", weight=35)
+                add_reason("Android manifest topilmadi", "APK ichida AndroidManifest.xml yo‘q; fayl odatiy Android ilova paketiga o‘xshamaydi.", "high", weight=35)
             elif "AndroidManifest.xml" in encrypted_name_set:
                 encrypted_critical = [
                     name for name in encrypted_names
                     if name == "AndroidManifest.xml" or re.fullmatch(r"classes(?:\d+)?\.dex", name)
                 ]
-                critical_detail = f" Зашифрованы ключевые файлы: {', '.join(encrypted_critical[:4])}." if encrypted_critical else ""
+                critical_detail = f" Shifrlangan muhim fayllar: {', '.join(encrypted_critical[:4])}." if encrypted_critical else ""
                 add_reason(
-                    "Зашифрованное содержимое APK",
-                    f"Внутри APK зашифровано ZIP-шифрованием файлов: {len(encrypted_names)}.{critical_detail} Разрешения, компоненты и код недоступны для анализа.",
+                    "APK ichidagi ma’lumotlar shifrlangan",
+                    f"APK ichidagi {len(encrypted_names)} ta ZIP yozuvi shifrlangan.{critical_detail} Shu sabab ruxsatlar, komponentlar va kodni tahlil qilib bo‘lmadi.",
                     "high",
-                    "Структура",
+                    "Tuzilma",
                     35,
                 )
             else:
@@ -147,33 +147,33 @@ def explain_apk_light(apk_path: str) -> dict:
                     manifest_data = _parse_apk_manifest(manifest)
                     evidence.update({key: manifest_data[key] for key in ("package", "version", "min_sdk", "permissions")})
                     if evidence["package"]:
-                        add_reason("Android manifest и пакет", "Имя пакета: {}".format(evidence["package"]), "low", weight=5)
+                        add_reason("Android manifest va paket", "Paket nomi: {}".format(evidence["package"]), "low", weight=5)
                     else:
-                        add_reason("Android manifest найден", "AndroidManifest.xml присутствует, но имя пакета прочитать не удалось.", "low", weight=5)
+                        add_reason("Android manifest topildi", "AndroidManifest.xml mavjud, lekin paket nomini o‘qib bo‘lmadi.", "low", weight=5)
                     if evidence["version"]:
-                        add_reason("Версия приложения", evidence["version"], "low", weight=2)
+                        add_reason("Ilova versiyasi", evidence["version"], "low", weight=2)
                     if evidence["min_sdk"]:
-                        add_reason("Минимальная версия Android", evidence["min_sdk"], "low", weight=2)
+                        add_reason("Androidning eng eski qo‘llanadigan versiyasi", evidence["min_sdk"], "low", weight=2)
 
                     risky_permissions = {
-                        "SMS и звонки": {
+                        "SMS va qo‘ng‘iroqlar": {
                             "android.permission.READ_SMS", "android.permission.RECEIVE_SMS", "android.permission.SEND_SMS",
                             "android.permission.RECEIVE_MMS", "android.permission.READ_CALL_LOG",
                             "android.permission.WRITE_CALL_LOG", "android.permission.CALL_PHONE",
                         },
-                        "Контакты и телефон": {
+                        "Kontaktlar va telefon": {
                             "android.permission.READ_CONTACTS", "android.permission.WRITE_CONTACTS",
                             "android.permission.READ_PHONE_STATE", "android.permission.READ_PHONE_NUMBERS",
                         },
-                        "Местоположение и микрофон": {
+                        "Joylashuv va mikrofon": {
                             "android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION",
                             "android.permission.ACCESS_BACKGROUND_LOCATION", "android.permission.RECORD_AUDIO",
                         },
-                        "Файлы и установка приложений": {
+                        "Fayllar va ilova o‘rnatish": {
                             "android.permission.MANAGE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE",
                             "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.REQUEST_INSTALL_PACKAGES",
                         },
-                        "Доступ поверх других окон": {
+                        "Boshqa oynalar ustida ko‘rsatish": {
                             "android.permission.SYSTEM_ALERT_WINDOW", "android.permission.BIND_ACCESSIBILITY_SERVICE",
                             "android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS",
                         },
@@ -183,19 +183,19 @@ def explain_apk_light(apk_path: str) -> dict:
                         found = sorted(found_permissions & known_permissions)
                         if found:
                             short_names = [permission.rsplit(".", 1)[-1] for permission in found[:3]]
-                            extra = f" и ещё {len(found) - 3}" if len(found) > 3 else ""
-                            severity = "high" if group == "SMS и звонки" else "medium"
+                            extra = f" va yana {len(found) - 3} ta" if len(found) > 3 else ""
+                            severity = "high" if group == "SMS va qo‘ng‘iroqlar" else "medium"
                             add_reason(
-                                f"Разрешения: {group}",
-                                f"{len(found)} разрешений: {', '.join(short_names)}{extra}. Само наличие разрешения не доказывает вредоносное поведение.",
+                                f"Ruxsatlar: {group}",
+                                f"{len(found)} ta ruxsat: {', '.join(short_names)}{extra}. Ruxsatning o‘zi zararli xatti-harakatni isbotlamaydi.",
                                 severity,
-                                "Разрешения",
+                                "Ruxsatlar",
                                 24 if severity == "high" else 14,
                             )
-                    if evidence["permissions"] and categories["Разрешения"] == 0:
-                        add_reason("Запрошенные Android-разрешения", f"Найдено разрешений: {len(evidence['permissions'])}; чувствительных из проверяемого списка нет.", "low", "Разрешения", 4)
+                    if evidence["permissions"] and categories["Ruxsatlar"] == 0:
+                        add_reason("So‘ralgan Android ruxsatlari", f"Jami ruxsatlar: {len(evidence['permissions'])}; tekshirilgan sezgir ruxsatlar topilmadi.", "low", "Ruxsatlar", 4)
                     elif not evidence["permissions"]:
-                        add_reason("Android-разрешения", "В manifest не найден список запрошенных разрешений.", "low", "Разрешения", 3)
+                        add_reason("Android ruxsatlari", "Manifestda so‘ralgan ruxsatlar ro‘yxati topilmadi.", "low", "Ruxsatlar", 3)
 
                     components = manifest_data.get("components", [])
                     open_components = [component for component in components if component.get("exported") is True and not component.get("permission")]
@@ -203,22 +203,22 @@ def explain_apk_light(apk_path: str) -> dict:
                     if open_components:
                         examples = ", ".join(component["name"] for component in open_components[:3])
                         add_reason(
-                            "Снаружи доступные компоненты",
-                            f"{len(open_components)} компонент открыт другим приложениям без указанного permission: {examples}.",
+                            "Tashqi ilovalarga ochiq komponentlar",
+                            f"{len(open_components)} ta komponent boshqa ilovalarga ruxsatsiz ochiq: {examples}.",
                             "medium",
-                            "Компоненты",
+                            "Komponentlar",
                             18,
                         )
                     elif components:
-                        add_reason("Компоненты приложения", f"В manifest описано компонентов: {len(components)}; открытых без permission не найдено.", "low", "Компоненты", 5)
+                        add_reason("Ilova komponentlari", f"Manifestda {len(components)} ta komponent bor; ruxsatsiz ochiq komponent topilmadi.", "low", "Komponentlar", 5)
                 else:
-                    add_reason("Слишком большой manifest", "AndroidManifest.xml больше 2 МБ и пропущен при анализе.", "medium", weight=12)
+                    add_reason("Manifest hajmi katta", "AndroidManifest.xml 2 MB dan katta bo‘lgani uchun tahlil qilinmadi.", "medium", weight=12)
 
-            add_reason("Структура APK", f"ZIP-записей: {len(infos)}; DEX-файлов: {len(dex_names)}.", "low", weight=6)
+            add_reason("APK tuzilmasi", f"ZIP yozuvlari: {len(infos)}; DEX fayllari: {len(dex_names)}.", "low", weight=6)
             if not dex_names:
-                add_reason("DEX-код не найден", "В APK отсутствуют classes.dex; проверьте, что файл является полным APK.", "medium", weight=12)
+                add_reason("DEX kodi topilmadi", "APK ichida classes.dex yo‘q; fayl to‘liq APK ekanini tekshiring.", "medium", weight=12)
             if native_names:
-                add_reason("Нативные библиотеки", f"Найдено .so файлов: {len(native_names)} ({', '.join(native_names[:3])}). Наличие native-кода само по себе не означает вредоносность.", "medium", "Сеть и код", 12)
+                add_reason("Mahalliy kutubxonalar", f".so fayllari: {len(native_names)} ta ({', '.join(native_names[:3])}). Bunday kod borligi o‘z-o‘zidan zararli ekanini bildirmaydi.", "medium", "Tarmoq va kod", 12)
 
             # Inspect the manifest and DEX string tables without extracting files to disk.
             searchable = bytearray()
@@ -237,25 +237,25 @@ def explain_apk_light(apk_path: str) -> dict:
             evidence["urls"] = urls[:10]
             evidence["ip_count"] = len(ips)
             if urls or ips:
-                detail = f"Код/manifest содержит URL: {len(urls)}, IP-адресов: {len(ips)}"
+                detail = f"Kod yoki manifestdagi URL manzillar: {len(urls)} ta, IP manzillar: {len(ips)} ta"
                 if urls:
-                    detail += f"; примеры: {', '.join(urls[:3])}"
-                add_reason("Сетевые адреса в приложении", detail + ". Адреса могут использоваться и в обычных функциях приложения.", "medium", "Сеть и код", 12)
+                    detail += f"; misollar: {', '.join(urls[:3])}"
+                add_reason("Ilovadagi tarmoq manzillari", detail + ". Bu manzillar odatiy ilova vazifalari uchun ham ishlatilishi mumkin.", "medium", "Tarmoq va kod", 12)
 
             indicator_patterns = {
-                "Динамическая загрузка кода": (rb"DexClassLoader", rb"PathClassLoader", rb"InMemoryDexClassLoader"),
-                "Запуск системных команд": (rb"Runtime;->exec", rb"java/lang/ProcessBuilder", rb"/system/bin/sh"),
-                "Доступность / перехват ввода": (rb"AccessibilityService", rb"BIND_ACCESSIBILITY_SERVICE", rb"getWindowState"),
+                "Kodni dinamik yuklash": (rb"DexClassLoader", rb"PathClassLoader", rb"InMemoryDexClassLoader"),
+                "Tizim buyruqlarini ishga tushirish": (rb"Runtime;->exec", rb"java/lang/ProcessBuilder", rb"/system/bin/sh"),
+                "Maxsus imkoniyatlar xizmati": (rb"AccessibilityService", rb"BIND_ACCESSIBILITY_SERVICE", rb"getWindowState"),
             }
             for title, patterns in indicator_patterns.items():
                 hits = sum(searchable.count(pattern.lower()) + searchable.count(pattern) for pattern in patterns)
                 if hits:
-                    add_reason(title, f"В manifest/DEX найдены связанные строки ({hits}). Нужна проверка контекста; одна строка не подтверждает использование функции.", "medium", "Сеть и код", 12)
+                    add_reason(title, f"Manifest yoki DEX ichida shu belgiga oid yozuvlar topildi ({hits} ta). Bu yozuvning o‘zi funksiya ishlatilishini isbotlamaydi; kontekstni tekshirish kerak.", "medium", "Tarmoq va kod", 12)
 
     except (OSError, zipfile.BadZipFile, RuntimeError) as exc:
         add_reason(
-            "Ошибка чтения APK",
-            f"Не удалось прочитать APK: {type(exc).__name__}: {exc}",
+            "APK faylini o‘qib bo‘lmadi",
+            "Fayl buzilgan yoki qo‘llab-quvvatlanmaydigan formatda bo‘lishi mumkin.",
             "high",
             weight=35,
         )
